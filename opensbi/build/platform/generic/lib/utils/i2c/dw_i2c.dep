@@ -1,0 +1,14 @@
+/root/opensbi/build/platform/generic/lib/utils/i2c/dw_i2c.o: /root/opensbi/lib/utils/i2c/dw_i2c.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_io.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_timer.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi/sbi_string.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi_utils/i2c/dw_i2c.h \
+ /root/opensbi/include/sbi_utils/i2c/i2c.h \
+ /root/opensbi/include/sbi/sbi_list.h

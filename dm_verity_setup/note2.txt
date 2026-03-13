@@ -1,0 +1,15 @@
+nickd@nickpc-g16:~/riscv_keys$ veritysetup format rootfs.img rootfs.hash   --hash=sha256   --data-block-size=4096   --hash-block-size=4096
+VERITY header information for rootfs.hash.
+UUID:            	e3963688-668f-4eee-8133-91ddf389cd52
+Hash type:       	1
+Data blocks:     	2097152
+Data block size: 	4096 [bytes]
+Hash blocks:     	16513
+Hash block size: 	4096 [bytes]
+Hash algorithm:  	sha256
+Salt:            	bee895b5e3fb19bb770dc81d87c0746d5602417291f71c0e8cb15fecacaa50f1
+Root hash:      	5ae51d681f4759e3320026d0b38d614a7e8175bf9837e7485139801ca87208d2
+Hash device size: 	67641344 [bytes]
+
+
+I'll get back to this when it's done and I can reason about what should/shouldn't be pushed to github

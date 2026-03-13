@@ -1,0 +1,49 @@
+/dts-v1/;
+
+/ {
+    description = "U-Boot FIT image for k1-x_deb1 (signed)";
+    #address-cells = <2>;
+
+    images {
+        uboot {
+            description = "U-Boot";
+            data = /incbin/("u-boot.bin");
+            type = "standalone";
+            arch = "riscv";
+            os = "u-boot";
+            compression = "none";
+            load = <0x0 0x00200000>;
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+
+        fdt_1 {
+            description = "k1-x_deb1";
+            data = /incbin/("k1-x_deb1.dtb");
+            type = "flat_dt";
+            arch = "riscv";
+            compression = "none";
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+    };
+
+    configurations {
+        default = "conf_1";
+
+        conf_1 {
+            description = "k1-x_deb1";
+            loadables = "uboot";
+            fdt = "fdt_1";
+
+            signature {
+                algo = "sha256,rsa2048";
+                key-name-hint = "rot";
+                sign-images = "loadables", "fdt";
+            };
+        };
+    };
+};
+

@@ -1,0 +1,26 @@
+/root/opensbi/build/platform/generic/lib/utils/psci/psci_on.o: /root/opensbi/lib/utils/psci/psci_on.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi_utils/psci/psci.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/platform/generic/include/spacemit/spacemit_config.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/core_common.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/k1x_evb.h \
+ /root/opensbi/include/sbi_utils/cache/cacheflush.h \
+ /root/opensbi/include/sbi/riscv_io.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi_utils/psci/plat/common/platform.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/sbi_platform.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_version.h \
+ /root/opensbi/include/sbi/sbi_trap_ldst.h \
+ /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi/sbi_hart.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/lib/utils/psci/psci_private.h \
+ /root/opensbi/include/sbi/riscv_locks.h

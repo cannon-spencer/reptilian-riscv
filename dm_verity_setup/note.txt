@@ -1,0 +1,22 @@
+nickd@nickpc-g16:/run/media/nickd/Ventoy$ veritysetup format rootfs.img rootfs.hash   --hash=sha256   --data-block-size=4096   --hash-block-size=4096
+VERITY header information for rootfs.hash.
+UUID:            	764f5682-1200-4885-9356-36809ef46607
+Hash type:       	1
+Data blocks:     	1016799
+Data block size: 	4096 [bytes]
+Hash blocks:     	8008
+Hash block size: 	4096 [bytes]
+Hash algorithm:  	sha256
+Salt:            	438e38074dc497de4dba2a1cfbbd51779796cab05e1d534c8f66f0942c12b827
+Root hash:      	93c1566ecad9e602e6bb785017aa79c0009d2f3af342fff2d4f3065c2a5d45d0
+Hash device size: 	32804864 [bytes]
+nickd@nickpc-g16:/run/media/nickd/Ventoy$ getclip > ~/riscv_keys/rootfs_hash_info.txt
+nickd@nickpc-g16:/run/media/nickd/Ventoy$ printf "%s" 93c1566ecad9e602e6bb785017aa79c0009d2f3af342fff2d4f3065c2a5d45d0 | xxd -r -p > ~/riscv_keys/roothash.bin
+nickd@nickpc-g16:/run/media/nickd/Ventoy$ cd 
+nickd@nickpc-g16:~$ cd riscv_keys/
+nickd@nickpc-g16:~/riscv_keys$ ls
+rootfs.hash  rootfs_hash_info.txt  roothash.bin  verity_cert.pem  verity_key.pem
+nickd@nickpc-g16:~/riscv_keys$ openssl dgst -sha256 -sign verity_key.pem -out roothash.sig roothash.bin 
+nickd@nickpc-g16:~/riscv_keys$ 
+
+

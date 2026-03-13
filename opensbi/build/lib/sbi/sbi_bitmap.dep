@@ -1,0 +1,5 @@
+/root/opensbi/build/lib/sbi/sbi_bitmap.o: /root/opensbi/lib/sbi/sbi_bitmap.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_bitmap.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_types.h

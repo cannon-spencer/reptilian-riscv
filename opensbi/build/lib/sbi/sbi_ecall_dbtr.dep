@@ -1,0 +1,21 @@
+/root/opensbi/build/lib/sbi/sbi_ecall_dbtr.o: /root/opensbi/lib/sbi/sbi_ecall_dbtr.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_ecall.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/sbi_domain.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/sbi_hartmask.h \
+ /root/opensbi/include/sbi/sbi_bitmap.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_domain_context.h \
+ /root/opensbi/include/sbi/sbi_domain_data.h \
+ /root/opensbi/include/sbi/sbi_dbtr.h \
+ /root/opensbi/include/sbi/riscv_dbtr.h

@@ -1,0 +1,3 @@
+/root/opensbi/build/platform/generic/firmware/fw_dynamic.elf.ld: /root/opensbi/firmware/fw_dynamic.elf.ldS \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/firmware/fw_base.ldS

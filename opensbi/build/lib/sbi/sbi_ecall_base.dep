@@ -1,0 +1,20 @@
+/root/opensbi/build/lib/sbi/sbi_ecall_base.o: /root/opensbi/lib/sbi/sbi_ecall_base.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_ecall.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/sbi_version.h \
+ /root/opensbi/include/sbi_utils/cache/cacheflush.h \
+ /root/opensbi/include/sbi/riscv_io.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/include/sbi_utils/psci/psci.h \
+ /root/opensbi/platform/generic/include/spacemit/spacemit_config.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/core_common.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/k1x_evb.h

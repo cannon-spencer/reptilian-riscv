@@ -1,0 +1,5 @@
+/root/opensbi/build/lib/sbi/riscv_locks.o: /root/opensbi/lib/sbi/riscv_locks.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/sbi_types.h

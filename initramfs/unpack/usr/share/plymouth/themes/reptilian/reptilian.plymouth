@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=reptilian
+Description=Theme for Reptilian 37
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/reptilian
+ScriptFile=/usr/share/plymouth/themes/reptilian/reptilian.script
+

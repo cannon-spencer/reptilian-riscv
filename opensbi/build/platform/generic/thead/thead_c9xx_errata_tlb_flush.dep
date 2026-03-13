@@ -1,0 +1,6 @@
+/root/opensbi/build/platform/generic/thead/thead_c9xx_errata_tlb_flush.o: \
+ /root/opensbi/platform/generic/thead/thead_c9xx_errata_tlb_flush.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/riscv_asm.h

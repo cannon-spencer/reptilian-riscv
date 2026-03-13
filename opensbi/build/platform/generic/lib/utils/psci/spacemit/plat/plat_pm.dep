@@ -1,0 +1,35 @@
+/root/opensbi/build/platform/generic/lib/utils/psci/spacemit/plat/plat_pm.o: /root/opensbi/lib/utils/psci/spacemit/plat/plat_pm.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi_utils/cci/cci.h \
+ /root/opensbi/include/sbi_utils/psci/psci.h \
+ /root/opensbi/platform/generic/include/spacemit/spacemit_config.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/core_common.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/k1x_evb.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/sbi_ipi.h /root/opensbi/include/sbi/sbi_hart.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_hsm.h \
+ /root/opensbi/include/sbi/sbi_hartmask.h \
+ /root/opensbi/include/sbi/sbi_bitmap.h \
+ /root/opensbi/include/sbi/sbi_domain.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi/sbi_domain_context.h \
+ /root/opensbi/include/sbi/sbi_domain_data.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi_utils/psci/plat/arm/common/arm_def.h \
+ /root/opensbi/include/sbi_utils/cache/cacheflush.h \
+ /root/opensbi/include/sbi/riscv_io.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/lib/utils/psci/spacemit/plat/underly_implement.h \
+ /root/opensbi/lib/utils/psci/spacemit/plat/../../psci_private.h \
+ /root/opensbi/include/sbi/sbi_platform.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_version.h \
+ /root/opensbi/include/sbi/sbi_trap_ldst.h \
+ /root/opensbi/include/sbi/sbi_trap.h

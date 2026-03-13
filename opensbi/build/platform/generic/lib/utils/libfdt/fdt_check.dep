@@ -1,0 +1,10 @@
+/root/opensbi/build/platform/generic/lib/utils/libfdt/fdt_check.o: /root/opensbi/lib/utils/libfdt/fdt_check.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/lib/utils/libfdt/libfdt_env.h \
+ /root/opensbi/include/sbi/sbi_string.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_byteorder.h \
+ /root/opensbi/lib/utils/libfdt/fdt.h \
+ /root/opensbi/lib/utils/libfdt/libfdt.h \
+ /root/opensbi/lib/utils/libfdt/libfdt_env.h \
+ /root/opensbi/lib/utils/libfdt/libfdt_internal.h

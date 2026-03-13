@@ -1,0 +1,4 @@
+/root/opensbi/build/lib/sbi/sbi_bitops.o: /root/opensbi/lib/sbi/sbi_bitops.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_types.h

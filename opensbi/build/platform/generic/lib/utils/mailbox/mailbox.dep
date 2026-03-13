@@ -1,0 +1,9 @@
+/root/opensbi/build/platform/generic/lib/utils/mailbox/mailbox.o: /root/opensbi/lib/utils/mailbox/mailbox.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_string.h \
+ /root/opensbi/include/sbi_utils/mailbox/mailbox.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi/riscv_atomic.h

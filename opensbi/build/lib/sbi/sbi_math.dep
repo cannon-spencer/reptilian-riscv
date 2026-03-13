@@ -1,0 +1,2 @@
+/root/opensbi/build/lib/sbi/sbi_math.o: /root/opensbi/lib/sbi/sbi_math.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h

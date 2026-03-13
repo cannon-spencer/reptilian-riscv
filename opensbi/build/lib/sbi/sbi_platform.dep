@@ -1,0 +1,15 @@
+/root/opensbi/build/lib/sbi/sbi_platform.o: /root/opensbi/lib/sbi/sbi_platform.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_platform.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_version.h \
+ /root/opensbi/include/sbi/sbi_trap_ldst.h \
+ /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/sbi_string.h

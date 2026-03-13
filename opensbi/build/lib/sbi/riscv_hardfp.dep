@@ -1,0 +1,2 @@
+/root/opensbi/build/lib/sbi/riscv_hardfp.o: /root/opensbi/lib/sbi/riscv_hardfp.S \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h

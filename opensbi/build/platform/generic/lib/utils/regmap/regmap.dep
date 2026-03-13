@@ -1,0 +1,7 @@
+/root/opensbi/build/platform/generic/lib/utils/regmap/regmap.o: /root/opensbi/lib/utils/regmap/regmap.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi_utils/regmap/regmap.h \
+ /root/opensbi/include/sbi/sbi_list.h

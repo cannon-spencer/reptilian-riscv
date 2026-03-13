@@ -1,0 +1,12 @@
+/root/opensbi/build/platform/generic/thead/thead_c9xx_pmu.o: /root/opensbi/platform/generic/thead/thead_c9xx_pmu.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/platform/generic/include/thead/c9xx_encoding.h \
+ /root/opensbi/platform/generic/include/thead/c9xx_pmu.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_pmu.h /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/sbi_scratch.h

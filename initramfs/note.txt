@@ -1,0 +1,21 @@
+# Let's unpack initramfs
+
+root@reptilian37:~/fitboot/initrd_test# zstd -d ../initrd.img-6.6.63 -o initrd.raw
+../initrd.img-6.6.63: 139279872 bytes                                          
+root@reptilian37:~/fitboot/initrd_test# ls
+initrd.raw
+root@reptilian37:~/fitboot/initrd_test# mkdir unpack
+root@reptilian37:~/fitboot/initrd_test# cd unpack/
+root@reptilian37:~/fitboot/initrd_test/unpack# cpio -idmv < ../initrd.raw 
+root@reptilian37:~/fitboot/initrd_test/unpack# find . | cpio -H newc -o | zstd -19 -o ../dm-initrd.img-6.6.63
+Read:  64.5 MiB  ==> 12%272032 blocks                                          
+/*stdin*\            : 17.74%   (   133 MiB =>   23.6 MiB, ../dm-initrd.img-6.6.63) 
+
+# ^^^ This takes literally forever
+
+# Create signed kernel image (place in /boot/env_k1-x.txt)
+
+root@reptilian37:~/fitboot# mkimage -f kernel.its -k ./keys/ -K uboot.dtb -r signed_kernel.itb
+
+# Hopefully that works :D
+

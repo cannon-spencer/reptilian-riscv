@@ -1,0 +1,9 @@
+/root/opensbi/build/platform/generic/firmware/payloads/test_head.o: /root/opensbi/firmware/payloads/test_head.S \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h
+/root/opensbi/build/platform/generic/firmware/payloads/test_main.o: /root/opensbi/firmware/payloads/test_main.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_string.h

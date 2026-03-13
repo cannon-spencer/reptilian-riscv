@@ -1,0 +1,27 @@
+/root/opensbi/build/platform/generic/lib/utils/timer/fdt_timer_mtimer.o: /root/opensbi/lib/utils/timer/fdt_timer_mtimer.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/lib/utils/libfdt/libfdt.h \
+ /root/opensbi/lib/utils/libfdt/libfdt_env.h \
+ /root/opensbi/include/sbi/sbi_string.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_byteorder.h \
+ /root/opensbi/lib/utils/libfdt/fdt.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_heap.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi_utils/fdt/fdt_helper.h \
+ /root/opensbi/include/sbi/sbi_domain.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/sbi_hartmask.h \
+ /root/opensbi/include/sbi/sbi_bitmap.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_domain_context.h \
+ /root/opensbi/include/sbi/sbi_domain_data.h \
+ /root/opensbi/include/sbi_utils/timer/fdt_timer.h \
+ /root/opensbi/include/sbi_utils/fdt/fdt_driver.h \
+ /root/opensbi/include/sbi_utils/timer/aclint_mtimer.h

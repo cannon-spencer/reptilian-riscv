@@ -1,0 +1,3 @@
+/root/opensbi/build/platform/generic/firmware/fw_jump.elf.ld: /root/opensbi/firmware/fw_jump.elf.ldS \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/firmware/fw_base.ldS

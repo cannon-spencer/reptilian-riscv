@@ -1,0 +1,77 @@
+/dts-v1/;
+
+/ {
+    description = "BPI-F3 FIT Signed Kernel";
+
+    images {
+
+        kernel {
+            description = "Linux kernel";
+			
+			// Use the below line for config without verity rootfs
+			// Until networking issues are solved, the wifi module (rtl8852bs) refuses to work properly. fall back to this one
+            // data = /incbin/("vmlinuz-6.6.63");
+
+			// Image compiled with verity cert baked in
+            data = /incbin/("kernel_image_verity-6.6.63");
+            
+			type = "kernel";
+            arch = "riscv";
+            os = "linux";
+            compression = "none";
+            load = <0x600000>; // this is device specific
+            entry = <0x600000>; // found in early boot logs over UART
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+
+        fdt {
+            description = "Flattened Device Tree";
+            data = /incbin/("k1-x_deb1.dtb");
+            type = "flat_dt";
+            arch = "riscv";
+            os = "linux";
+            compression = "none";
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+
+        ramdisk {
+            description = "Initramfs";
+			
+			// default initramfs
+            // data = /incbin/("initrd.img-6.6.63");
+
+			// initramfs with dm verity
+            data = /incbin/("dm-initrd.img-6.6.63");
+			type = "ramdisk";
+            arch = "riscv";
+            os = "linux";
+            compression = "zstd";
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+    };
+
+    configurations {
+        default = "conf";
+
+        conf {
+            description = "BPI-F3 Signed Boot Config";
+            kernel = "kernel";
+            fdt = "fdt";
+            ramdisk = "ramdisk";
+
+            signature {
+                algo = "sha256,rsa2048";
+                key-name-hint = "rot";
+                sign-images = "kernel", "fdt", "ramdisk";
+		required = "conf";
+            };
+        };
+    };
+};
+

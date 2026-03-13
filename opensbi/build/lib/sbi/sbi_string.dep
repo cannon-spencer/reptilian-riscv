@@ -1,0 +1,4 @@
+/root/opensbi/build/lib/sbi/sbi_string.o: /root/opensbi/lib/sbi/sbi_string.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_string.h \
+ /root/opensbi/include/sbi/sbi_types.h

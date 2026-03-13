@@ -1,0 +1,9 @@
+/root/opensbi/build/lib/sbi/riscv_atomic.o: /root/opensbi/lib/sbi/riscv_atomic.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/riscv_atomic.h \
+ /root/opensbi/include/sbi/riscv_barrier.h

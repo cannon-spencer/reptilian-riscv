@@ -1,0 +1,7 @@
+/root/opensbi/build/platform/generic/lib/utils/serial/gaisler-uart.o: /root/opensbi/lib/utils/serial/gaisler-uart.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_io.h \
+ /root/opensbi/include/sbi/riscv_barrier.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi_utils/serial/gaisler-uart.h

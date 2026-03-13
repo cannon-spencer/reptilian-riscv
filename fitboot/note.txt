@@ -1,0 +1,3 @@
+# use this command to make the kernel image
+
+mkimage -f kernel.its -k ./keys/ -K uboot.dtb -r signed_kernel_dm.itb

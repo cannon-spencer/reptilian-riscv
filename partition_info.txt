@@ -1,0 +1,13 @@
+NAME         FSTYPE         FSVER LABEL  MOUNTPOINTS
+mmcblk2                                  
+|-mmcblk2p1                              
+|-mmcblk2p2                              
+|-mmcblk2p3                              
+|-mmcblk2p4                              
+|-mmcblk2p5  ext4           1.0          /boot
+|-mmcblk2p6  ext4           1.0          /
+|-mmcblk2p7  ext4           1.0   rootfs 
+|-mmcblk2p8  ext4           1.0          
+`-mmcblk2p9  DM_verity_hash 1            
+mmcblk2boot0                             
+mmcblk2boot1                             

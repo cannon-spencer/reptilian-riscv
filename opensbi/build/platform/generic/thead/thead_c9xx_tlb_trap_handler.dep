@@ -1,0 +1,3 @@
+/root/opensbi/build/platform/generic/thead/thead_c9xx_tlb_trap_handler.o: \
+ /root/opensbi/platform/generic/thead/thead_c9xx_tlb_trap_handler.S \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h

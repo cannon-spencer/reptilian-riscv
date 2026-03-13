@@ -1,0 +1,10 @@
+/root/opensbi/build/platform/generic/lib/utils/sys/htif.o: /root/opensbi/lib/utils/sys/htif.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_console.h \
+ /root/opensbi/include/sbi/sbi_error.h \
+ /root/opensbi/include/sbi/sbi_ecall_interface.h \
+ /root/opensbi/include/sbi/sbi_system.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi_utils/sys/htif.h

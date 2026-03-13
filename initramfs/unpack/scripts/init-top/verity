@@ -1,0 +1,33 @@
+#!/bin/sh
+
+echo "[initramfs] Setting up signed dm-verity..."
+
+DATA_DEV=/dev/mmcblk2p7
+HASH_DEV=/dev/mmcblk2p9
+ROOT_HASH="5ae51d681f4759e3320026d0b38d614a7e8175bf9837e7485139801ca87208d2"
+# SIG_FILE="/etc/verity/roothash.sig"
+
+# Make underlying devices read-only
+blockdev --setro /dev/mmcblk2
+blockdev --setro $DATA_DEV
+blockdev --setro $HASH_DEV
+
+udevadm settle
+
+if ! /sbin/veritysetup open \
+    "$DATA_DEV" \
+    rootfs \
+    "$HASH_DEV" \
+    "$ROOT_HASH" \
+    --hash=sha256 \
+    --data-block-size=4096 \
+    --hash-block-size=4096; then
+    # --root-hash-signature="$SIG_FILE"; then
+
+    echo "dm-verity setup failed"
+    exec sh
+fi
+
+# Override root device
+ROOT=/dev/mapper/rootfs
+readonly=y

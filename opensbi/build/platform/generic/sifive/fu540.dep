@@ -1,0 +1,21 @@
+/root/opensbi/build/platform/generic/sifive/fu540.o: /root/opensbi/platform/generic/sifive/fu540.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/platform/generic/include/platform_override.h \
+ /root/opensbi/include/sbi/sbi_ecall.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/include/sbi/sbi_list.h \
+ /root/opensbi/include/sbi/sbi_hart.h \
+ /root/opensbi/include/sbi/sbi_bitops.h \
+ /root/opensbi/include/sbi/sbi_trap.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi_utils/fdt/fdt_helper.h \
+ /root/opensbi/include/sbi/sbi_domain.h \
+ /root/opensbi/include/sbi/riscv_locks.h \
+ /root/opensbi/include/sbi/sbi_hartmask.h \
+ /root/opensbi/include/sbi/sbi_bitmap.h \
+ /root/opensbi/include/sbi/sbi_domain_context.h \
+ /root/opensbi/include/sbi/sbi_domain_data.h \
+ /root/opensbi/include/sbi_utils/fdt/fdt_fixup.h

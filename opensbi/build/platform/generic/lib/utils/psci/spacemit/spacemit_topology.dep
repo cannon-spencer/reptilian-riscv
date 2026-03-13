@@ -1,0 +1,8 @@
+/root/opensbi/build/platform/generic/lib/utils/psci/spacemit/spacemit_topology.o: \
+ /root/opensbi/lib/utils/psci/spacemit/spacemit_topology.c \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi_utils/psci/psci.h \
+ /root/opensbi/include/sbi/sbi_types.h \
+ /root/opensbi/platform/generic/include/spacemit/spacemit_config.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/core_common.h \
+ /root/opensbi/platform/generic/include/spacemit/./k1x/k1x_evb.h

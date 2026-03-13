@@ -1,0 +1,17 @@
+label: gpt
+label-id: 05456AB2-6F3C-4481-9868-6AAE6F8C1D75
+device: /dev/mmcblk2
+unit: sectors
+first-lba: 256
+last-lba: 244277214
+sector-size: 512
+
+/dev/mmcblk2p1 : start=         256, size=         512, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=2C78ED54-FC10-4726-9AB5-5CB2B82CC73E, name="unused"
+/dev/mmcblk2p2 : start=         768, size=         128, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=6DC2D817-2D1E-41EB-BEDC-6C2AADE23761, name="env"
+/dev/mmcblk2p3 : start=        2048, size=        2048, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=8E414DD2-18ED-4D17-B0AB-784E7B9A67A8, name="opensbi"
+/dev/mmcblk2p4 : start=        4096, size=        4096, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=83BCB14B-9741-484D-868B-D7BD17B02028, name="uboot"
+/dev/mmcblk2p5 : start=        8192, size=      819200, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=8DC20B53-3902-4E29-B157-74124CFE6DC6, name="bootfs"
+/dev/mmcblk2p6 : start=      827392, size=	  83886080, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=89B2D2D4-AD80-482F-99AF-4297F9D70243, name="devrootfs"
+/dev/mmcblk2p7 : start=	   84713472, size=	  16777216, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name="verityrootfs"
+/dev/mmcblk2p8 : start=   101490688, size=   142655454, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name="home"
+/dev/mmcblk2p9 : start=   244146142, size=      131072, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name="verityhash"

@@ -1,0 +1,9 @@
+/root/opensbi/build/platform/generic/firmware/fw_payload.o: /root/opensbi/firmware/fw_payload.S \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/firmware/fw_base.S /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/riscv_elf.h \
+ /root/opensbi/include/sbi/sbi_platform.h \
+ /root/opensbi/include/sbi/sbi_scratch.h \
+ /root/opensbi/include/sbi/sbi_trap.h

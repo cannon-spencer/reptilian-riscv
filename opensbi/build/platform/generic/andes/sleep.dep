@@ -1,0 +1,6 @@
+/root/opensbi/build/platform/generic/andes/sleep.o: /root/opensbi/platform/generic/andes/sleep.S \
+ /root/opensbi/build/platform/generic/kconfig/autoconf.h \
+ /root/opensbi/include/sbi/riscv_encoding.h \
+ /root/opensbi/include/sbi/sbi_const.h \
+ /root/opensbi/include/sbi/riscv_asm.h \
+ /root/opensbi/platform/generic/include/andes/andes.h
