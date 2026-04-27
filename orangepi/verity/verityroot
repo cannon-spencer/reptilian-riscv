@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+
+case "$1" in
+  prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+. /scripts/functions
+
+modprobe dm_verity || true
+modprobe dm_mod || true
+
+VERITY_DATA="/dev/disk/by-partlabel/verityrootfs"
+VERITY_HASH="/dev/disk/by-partlabel/verityhash"
+VERITY_NAME="verityroot"
+
+# Filled in during image build.
+ROOT_HASH="ecf7468cede7a5170a6f9f18d752359298ba12ac3790e7a3b42b23d44686b8f6"
+
+log_begin_msg "Opening dm-verity root"
+veritysetup open "$VERITY_DATA" "$VERITY_NAME" "$VERITY_HASH" "$ROOT_HASH"
+log_end_msg
