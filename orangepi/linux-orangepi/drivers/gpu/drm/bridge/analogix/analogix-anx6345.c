@@ -19,6 +19,7 @@
 #include <linux/types.h>
 
 #include <drm/drm_atomic_helper.h>
+#include <drm/drm_bridge.h>
 #include <drm/drm_crtc.h>
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_dp_helper.h>
@@ -49,7 +50,6 @@ struct anx6345 {
 	struct i2c_client *client;
 	struct edid *edid;
 	struct drm_connector connector;
-	struct drm_dp_link link;
 	struct drm_panel *panel;
 	struct regulator *dvdd12;
 	struct regulator *dvdd25;
@@ -97,7 +97,7 @@ static ssize_t anx6345_aux_transfer(struct drm_dp_aux *aux,
 static int anx6345_dp_link_training(struct anx6345 *anx6345)
 {
 	unsigned int value;
-	u8 dp_bw;
+	u8 dp_bw, dpcd[2];
 	int err;
 
 	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
@@ -144,18 +144,34 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
 	if (err)
 		return err;
 
-	/* Check link capabilities */
-	err = drm_dp_link_probe(&anx6345->aux, &anx6345->link);
-	if (err < 0) {
-		DRM_ERROR("Failed to probe link capabilities: %d\n", err);
-		return err;
-	}
+	/*
+	 * Power up the sink (DP_SET_POWER register is only available on DPCD
+	 * v1.1 and later).
+	 */
+	if (anx6345->dpcd[DP_DPCD_REV] >= 0x11) {
+		err = drm_dp_dpcd_readb(&anx6345->aux, DP_SET_POWER, &dpcd[0]);
+		if (err < 0) {
+			DRM_ERROR("Failed to read DP_SET_POWER register: %d\n",
+				  err);
+			return err;
+		}
 
-	/* Power up the sink */
-	err = drm_dp_link_power_up(&anx6345->aux, &anx6345->link);
-	if (err < 0) {
-		DRM_ERROR("Failed to power up DisplayPort link: %d\n", err);
-		return err;
+		dpcd[0] &= ~DP_SET_POWER_MASK;
+		dpcd[0] |= DP_SET_POWER_D0;
+
+		err = drm_dp_dpcd_writeb(&anx6345->aux, DP_SET_POWER, dpcd[0]);
+		if (err < 0) {
+			DRM_ERROR("Failed to power up DisplayPort link: %d\n",
+				  err);
+			return err;
+		}
+
+		/*
+		 * According to the DP 1.1 specification, a "Sink Device must
+		 * exit the power saving state within 1 ms" (Section 2.5.3.1,
+		 * Table 5-52, "Sink Control Field" (register 0x600).
+		 */
+		usleep_range(1000, 2000);
 	}
 
 	/* Possibly enable downspread on the sink */
@@ -194,20 +210,27 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
 	if (err)
 		return err;
 
-	value = drm_dp_link_rate_to_bw_code(anx6345->link.rate);
+	dpcd[0] = dp_bw;
 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-			   SP_DP_MAIN_LINK_BW_SET_REG, value);
+			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
 	if (err)
 		return err;
 
+	dpcd[1] = drm_dp_max_lane_count(anx6345->dpcd);
+
 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-			   SP_DP_LANE_COUNT_SET_REG, anx6345->link.num_lanes);
+			   SP_DP_LANE_COUNT_SET_REG, dpcd[1]);
 	if (err)
 		return err;
 
-	err = drm_dp_link_configure(&anx6345->aux, &anx6345->link);
+	if (drm_dp_enhanced_frame_cap(anx6345->dpcd))
+		dpcd[1] |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
+
+	err = drm_dp_dpcd_write(&anx6345->aux, DP_LINK_BW_SET, dpcd,
+				sizeof(dpcd));
+
 	if (err < 0) {
-		DRM_ERROR("Failed to configure DisplayPort link: %d\n", err);
+		DRM_ERROR("Failed to configure link: %d\n", err);
 		return err;
 	}
 
@@ -462,6 +485,9 @@ static int anx6345_get_modes(struct drm_connector *connector)
 
 	num_modes += drm_add_edid_modes(connector, anx6345->edid);
 
+	/* Driver currently supports only 6bpc */
+	connector->display_info.bpc = 6;
+
 unlock:
 	if (power_off)
 		anx6345_poweroff(anx6345);
@@ -469,7 +495,7 @@ unlock:
 	mutex_unlock(&anx6345->lock);
 
 	if (!num_modes && anx6345->panel)
-		num_modes += drm_panel_get_modes(anx6345->panel);
+		num_modes += drm_panel_get_modes(anx6345->panel, connector);
 
 	return num_modes;
 }
@@ -481,10 +507,6 @@ static const struct drm_connector_helper_funcs anx6345_connector_helper_funcs = 
 static void
 anx6345_connector_destroy(struct drm_connector *connector)
 {
-	struct anx6345 *anx6345 = connector_to_anx6345(connector);
-
-	if (anx6345->panel)
-		drm_panel_detach(anx6345->panel);
 	drm_connector_cleanup(connector);
 }
 
@@ -496,10 +518,16 @@ static const struct drm_connector_funcs anx6345_connector_funcs = {
 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
 };
 
-static int anx6345_bridge_attach(struct drm_bridge *bridge)
+static int anx6345_bridge_attach(struct drm_bridge *bridge,
+				 enum drm_bridge_attach_flags flags)
 {
 	struct anx6345 *anx6345 = bridge_to_anx6345(bridge);
 	int err;
+
+	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR) {
+		DRM_ERROR("Fix bridge driver to make connector optional!");
+		return -EINVAL;
+	}
 
 	if (!bridge->encoder) {
 		DRM_ERROR("Parent encoder object not found");
@@ -509,6 +537,7 @@ static int anx6345_bridge_attach(struct drm_bridge *bridge)
 	/* Register aux channel */
 	anx6345->aux.name = "DP-AUX";
 	anx6345->aux.dev = &anx6345->client->dev;
+	anx6345->aux.drm_dev = bridge->dev;
 	anx6345->aux.transfer = anx6345_aux_transfer;
 
 	err = drm_dp_aux_register(&anx6345->aux);
@@ -522,17 +551,11 @@ static int anx6345_bridge_attach(struct drm_bridge *bridge)
 				 DRM_MODE_CONNECTOR_eDP);
 	if (err) {
 		DRM_ERROR("Failed to initialize connector: %d\n", err);
-		return err;
+		goto aux_unregister;
 	}
 
 	drm_connector_helper_add(&anx6345->connector,
 				 &anx6345_connector_helper_funcs);
-
-	err = drm_connector_register(&anx6345->connector);
-	if (err) {
-		DRM_ERROR("Failed to register connector: %d\n", err);
-		return err;
-	}
 
 	anx6345->connector.polled = DRM_CONNECTOR_POLL_HPD;
 
@@ -540,22 +563,31 @@ static int anx6345_bridge_attach(struct drm_bridge *bridge)
 					   bridge->encoder);
 	if (err) {
 		DRM_ERROR("Failed to link up connector to encoder: %d\n", err);
-		return err;
+		goto connector_cleanup;
 	}
 
-	if (anx6345->panel) {
-		err = drm_panel_attach(anx6345->panel, &anx6345->connector);
-		if (err) {
-			DRM_ERROR("Failed to attach panel: %d\n", err);
-			return err;
-		}
+	err = drm_connector_register(&anx6345->connector);
+	if (err) {
+		DRM_ERROR("Failed to register connector: %d\n", err);
+		goto connector_cleanup;
 	}
 
 	return 0;
+connector_cleanup:
+	drm_connector_cleanup(&anx6345->connector);
+aux_unregister:
+	drm_dp_aux_unregister(&anx6345->aux);
+	return err;
+}
+
+static void anx6345_bridge_detach(struct drm_bridge *bridge)
+{
+	drm_dp_aux_unregister(&bridge_to_anx6345(bridge)->aux);
 }
 
 static enum drm_mode_status
 anx6345_bridge_mode_valid(struct drm_bridge *bridge,
+			  const struct drm_display_info *info,
 			  const struct drm_display_mode *mode)
 {
 	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
@@ -603,6 +635,7 @@ static void anx6345_bridge_enable(struct drm_bridge *bridge)
 
 static const struct drm_bridge_funcs anx6345_bridge_funcs = {
 	.attach = anx6345_bridge_attach,
+	.detach = anx6345_bridge_detach,
 	.mode_valid = anx6345_bridge_mode_valid,
 	.disable = anx6345_bridge_disable,
 	.enable = anx6345_bridge_enable,
@@ -690,14 +723,18 @@ static int anx6345_i2c_probe(struct i2c_client *client,
 	/* 1.2V digital core power regulator  */
 	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
 	if (IS_ERR(anx6345->dvdd12)) {
-		DRM_ERROR("dvdd12-supply not found\n");
+		if (PTR_ERR(anx6345->dvdd12) != -EPROBE_DEFER)
+			DRM_ERROR("Failed to get dvdd12 supply (%ld)\n",
+				  PTR_ERR(anx6345->dvdd12));
 		return PTR_ERR(anx6345->dvdd12);
 	}
 
 	/* 2.5V digital core power regulator  */
 	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
 	if (IS_ERR(anx6345->dvdd25)) {
-		DRM_ERROR("dvdd25-supply not found\n");
+		if (PTR_ERR(anx6345->dvdd25) != -EPROBE_DEFER)
+			DRM_ERROR("Failed to get dvdd25 supply (%ld)\n",
+				  PTR_ERR(anx6345->dvdd25));
 		return PTR_ERR(anx6345->dvdd25);
 	}
 
@@ -711,13 +748,13 @@ static int anx6345_i2c_probe(struct i2c_client *client,
 	/* Map slave addresses of ANX6345 */
 	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
 		if (anx6345_i2c_addresses[i] >> 1 != client->addr)
-			anx6345->i2c_clients[i] = i2c_new_dummy(client->adapter,
+			anx6345->i2c_clients[i] = i2c_new_dummy_device(client->adapter,
 						anx6345_i2c_addresses[i] >> 1);
 		else
 			anx6345->i2c_clients[i] = client;
 
-		if (!anx6345->i2c_clients[i]) {
-			err = -ENOMEM;
+		if (IS_ERR(anx6345->i2c_clients[i])) {
+			err = PTR_ERR(anx6345->i2c_clients[i]);
 			DRM_ERROR("Failed to reserve I2C bus %02x\n",
 				  anx6345_i2c_addresses[i]);
 			goto err_unregister_i2c;

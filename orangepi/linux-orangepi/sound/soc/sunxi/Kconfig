@@ -14,23 +14,13 @@ config SND_SUN8I_CODEC
 	tristate "Allwinner SUN8I audio codec"
 	depends on OF
 	depends on MACH_SUN8I || (ARM64 && ARCH_SUNXI) || COMPILE_TEST
+	depends on COMMON_CLK
 	select REGMAP_MMIO
 	help
 	  This option enables the digital part of the internal audio codec for
 	  Allwinner sun8i SoC (and particularly A33).
 
 	  Say Y or M if you want to add sun8i digital audio codec support.
-
-config SND_AC100_CODEC
-	tristate "Allwinner (X-Powers) AC100 audio codec"
-	depends on OF
-	depends on MACH_SUN8I || COMPILE_TEST
-	select REGMAP_MMIO
-	help
-	  This option enables the audio codec support for Allwinner (X-Powers)
-	  AC100 chip.
-
-	  Say Y or M if you want to add AC100 audio codec support.
 
 config SND_SUN8I_CODEC_ANALOG
 	tristate "Allwinner sun8i Codec Analog Controls Support"

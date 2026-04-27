@@ -85,18 +85,18 @@ set_debarch() {
 }
 
 # Some variables and settings used throughout the script
+KDEB_SOURCENAME=linux-$KERNELRELEASE
 version=$KERNELRELEASE
 if [ -n "$KDEB_PKGVERSION" ]; then
 	packageversion=$KDEB_PKGVERSION
 	revision=${packageversion##*-}
 else
-	revision=$(cat .version 2>/dev/null||echo 1)
+	revision=$($srctree/init/build-version)
 	packageversion=$version-$revision
 fi
 sourcename=$KDEB_SOURCENAME
 packagename=linux-image-$BRANCH$LOCALVERSION
 kernel_headers_packagename=linux-headers-$BRANCH$LOCALVERSION
-libc_headers_packagename=linux-libc-dev-$BRANCH$LOCALVERSION
 dtb_packagename=linux-dtb-$BRANCH$LOCALVERSION
 dbg_packagename=$packagename-dbg
 debarch=
@@ -178,13 +178,18 @@ Section: kernel
 Priority: optional
 Maintainer: $maintainer
 Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
-Homepage: http://www.kernel.org/
+Homepage: https://www.kernel.org/
 
 Package: $packagename
 Architecture: $debarch
 Description: Linux kernel, version $version
  This package contains the Linux kernel, modules and corresponding other
  files, version: $version.
+
+Package: $dtb_packagename
+Architecture: $debarch
+Description: Linux DTB, version $version
+ This package contains device blobs from the Linux kernel, version $version
 
 Package: $kernel_headers_packagename
 Architecture: $debarch
@@ -194,7 +199,7 @@ Description: Linux kernel headers for $version on $debarch
  .
  This is useful for people who need to build external modules
 
-Package: $libc_headers_packagename
+Package: linux-libc-dev
 Section: devel
 Provides: linux-kernel-headers
 Architecture: $debarch
@@ -202,6 +207,10 @@ Description: Linux support headers for userspace development
  This package provides userspaces headers from the Linux kernel.  These headers
  are used by the installed headers for GNU glibc and other system libraries.
 Multi-Arch: same
+EOF
+
+if is_enabled CONFIG_DEBUG_INFO; then
+cat <<EOF >> debian/control
 
 Package: $dbg_packagename
 Section: debug
@@ -209,12 +218,8 @@ Architecture: $debarch
 Description: Linux kernel debugging symbols for $version
  This package will come in handy if you need to debug the kernel. It provides
  all the necessary debug symbols for the kernel and its modules.
-
-Package: $dtb_packagename
-Architecture: $debarch
-Description: Linux DTB, version $version
- This package contains device blobs from the Linux kernel, version $version
 EOF
+fi
 
 cat <<EOF > debian/rules
 #!$(command -v $MAKE) -f
@@ -230,7 +235,7 @@ binary-arch:
 	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
 
 clean:
-	rm -rf debian/*tmp debian/files
+	rm -rf debian/files debian/linux-*
 	\$(MAKE) clean
 
 binary: binary-arch

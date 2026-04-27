@@ -63,10 +63,12 @@ EOT
 
 cat >> $pdir/DEBIAN/postinst << EOT
 cd /usr/src/linux-headers-$version
+rm -rf scripts/kconfig/conf scripts/basic/fixdep scripts/mod/mk_elfconfig
 echo "Compiling headers - please wait ..."
 find -type f -exec touch {} +
-make -s scripts >/dev/null
-make -s M=scripts/mod/ >/dev/null
+yes "" | make oldconfig >/dev/null
+make -j\$(grep -c 'processor' /proc/cpuinfo) -s scripts >/dev/null
+make -j\$(grep -c 'processor' /proc/cpuinfo) -s M=scripts/mod/ >/dev/null
 exit 0
 EOT
 
@@ -80,7 +82,60 @@ EOT
 
 	# Create the package
 	dpkg-gencontrol -p$pname -P"$pdir"
-	dpkg --build "$pdir" ..
+	dpkg-deb ${KDEB_COMPRESS:+-Z$KDEB_COMPRESS} --build "$pdir" ..
+}
+
+deploy_kernel_headers () {
+	pdir=$1
+
+	rm -rf $pdir
+
+	(
+		cd $srctree
+		find . arch/$SRCARCH -maxdepth 1 -name Makefile\*
+		find include scripts -type f -o -type l
+		find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform
+		find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f
+	) > debian/hdrsrcfiles
+
+	{
+		if is_enabled CONFIG_OBJTOOL; then
+			echo tools/objtool/objtool
+		fi
+
+		find arch/$SRCARCH/include Module.symvers include scripts -type f
+
+		if is_enabled CONFIG_GCC_PLUGINS; then
+			find scripts/gcc-plugins -name \*.so
+		fi
+	} > debian/hdrobjfiles
+
+	destdir=$pdir/usr/src/linux-headers-$version
+	mkdir -p $destdir
+	tar -c -f - -C $srctree -T debian/hdrsrcfiles | tar -xf - -C $destdir
+	tar -c -f - -T debian/hdrobjfiles | tar -xf - -C $destdir
+	rm -f debian/hdrsrcfiles debian/hdrobjfiles
+
+	# copy .config manually to be where it's expected to be
+	cp $KCONFIG_CONFIG $destdir/.config
+
+	mkdir -p $pdir/lib/modules/$version/
+	ln -s /usr/src/linux-headers-$version $pdir/lib/modules/$version/build
+}
+
+deploy_libc_headers () {
+	pdir=$1
+
+	rm -rf $pdir
+
+	$MAKE -f $srctree/Makefile headers
+	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH=$pdir/usr
+
+	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
+	# used by Debian-based distros (to support multi-arch)
+	host_arch=$(dpkg-architecture -a$(cat debian/arch) -qDEB_HOST_MULTIARCH)
+	mkdir $pdir/usr/include/$host_arch
+	mv $pdir/usr/include/asm $pdir/usr/include/$host_arch/
 }
 
 version=$KERNELRELEASE
@@ -103,7 +158,7 @@ fi
 # XXX: have each arch Makefile export a variable of the canonical image install
 # path instead
 case $ARCH in
-aarch64|arm64)
+aarch64|arm64|riscv)
 	image_name=Image
 	installed_image_path="boot/vmlinuz-$version"
 
@@ -224,16 +279,7 @@ done
 ##
 sed -e "s/exit 0//g" -i $tmpdir/DEBIAN/postinst
 cat >> $tmpdir/DEBIAN/postinst <<EOT
-if [ "\$(grep nand /proc/partitions)" != "" ] && [ "\$(grep mmc /proc/partitions)" = "" ]; then
-	mkimage -A arm -O linux -T kernel -C none -a "0x40008000" -e "0x40008000" -n "Linux kernel" -d /$installed_image_path /boot/uImage  > /dev/null 2>&1
-	cp /boot/uImage /tmp/uImage
-	sync
-	mountpoint -q /boot || mount /boot
-	cp /tmp/uImage /boot/uImage
-	rm -f /$installed_image_path
-else
-	ln -sf $(basename $installed_image_path) /boot/$image_name || mv /$installed_image_path /boot/$image_name
-fi
+ln -sf $(basename $installed_image_path) /boot/$image_name 2> /dev/null || cp /$installed_image_path /boot/$image_name
 touch /boot/.next
 exit 0
 EOT
@@ -273,6 +319,8 @@ echo "exit 0" >> $tmpdir/DEBIAN/preinst
 (cd $srctree; find security/*/include -type f) >> "$objtree/debian/hdrsrcfiles"
 (cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
 (cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
+ldstemp=$(mktemp);cp scripts/module.lds $ldstemp
+#(cd $objtree; make M=scripts clean;)
 if is_enabled CONFIG_STACK_VALIDATION; then
 	(cd $objtree; find tools/objtool -type f -executable) >> "$objtree/debian/hdrobjfiles"
 fi
@@ -282,20 +330,16 @@ if is_enabled CONFIG_GCC_PLUGINS; then
 fi
 destdir=$kernel_headers_dir/usr/src/linux-headers-$version
 mkdir -p "$destdir"
-mkdir -p "$destdir"/net/wireguard; 
-		touch "$destdir"/net/wireguard/{Kconfig,Makefile} # workaround for Wireguard
 (cd $destdir; patch -p1 < /tmp/headers-debian-byteshift.patch)
 (cd $srctree; tar -c -f - -T -) < "$objtree/debian/hdrsrcfiles" | (cd $destdir; tar -xf -)
 (cd $objtree; tar -c -f - -T -) < "$objtree/debian/hdrobjfiles" | (cd $destdir; tar -xf -)
 (cd $objtree; cp $KCONFIG_CONFIG $destdir/.config) # copy .config manually to be where it's expected to be
+mv ${ldstemp} $destdir/scripts/module.lds
 ln -sf "/usr/src/linux-headers-$version" "$kernel_headers_dir/lib/modules/$version/build"
 rm -f "$objtree/debian/hdrsrcfiles" "$objtree/debian/hdrobjfiles"
 
-(cd $destdir; make M=scripts clean)
-
 if [ "$ARCH" != "um" ]; then
 	create_package "$kernel_headers_packagename" "$kernel_headers_dir" "headers"
-#UNCOMENT	create_package "$libc_headers_packagename" "$libc_headers_dir"
 	create_package "$dtb_packagename" "$dtb_dir" "dtb"
 fi
 

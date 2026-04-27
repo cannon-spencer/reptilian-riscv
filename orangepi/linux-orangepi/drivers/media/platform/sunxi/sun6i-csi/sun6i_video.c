@@ -48,8 +48,6 @@ static const u32 supported_pixformats[] = {
 	V4L2_PIX_FMT_YVYU,
 	V4L2_PIX_FMT_UYVY,
 	V4L2_PIX_FMT_VYUY,
-	V4L2_PIX_FMT_RGB565,
-	V4L2_PIX_FMT_RGB555,
 	V4L2_PIX_FMT_HM12,
 	V4L2_PIX_FMT_NV12,
 	V4L2_PIX_FMT_NV21,
@@ -153,8 +151,10 @@ static int sun6i_video_start_streaming(struct vb2_queue *vq, unsigned int count)
 	}
 
 	subdev = sun6i_video_remote_subdev(video, NULL);
-	if (!subdev)
+	if (!subdev) {
+		ret = -EINVAL;
 		goto stop_media_pipeline;
+	}
 
 	config.pixelformat = video->fmt.fmt.pix.pixelformat;
 	config.code = video->mbus_code;
@@ -435,28 +435,6 @@ static int vidioc_s_input(struct file *file, void *fh, unsigned int i)
 	return 0;
 }
 
-static int vidioc_g_parm(struct file *file, void *priv,
-			 struct v4l2_streamparm *p)
-{
-	struct sun6i_video *video = video_drvdata(file);
-	struct v4l2_subdev *subdev;
-
-	subdev = sun6i_video_remote_subdev(video, NULL);
-
-	return v4l2_g_parm_cap(video_devdata(file), subdev, p);
-}
-
-static int vidioc_s_parm(struct file *file, void *priv,
-			 struct v4l2_streamparm *p)
-{
-	struct sun6i_video *video = video_drvdata(file);
-	struct v4l2_subdev *subdev;
-
-	subdev = sun6i_video_remote_subdev(video, NULL);
-
-	return v4l2_s_parm_cap(video_devdata(file), subdev, p);
-}
-
 static const struct v4l2_ioctl_ops sun6i_video_ioctl_ops = {
 	.vidioc_querycap		= vidioc_querycap,
 	.vidioc_enum_fmt_vid_cap	= vidioc_enum_fmt_vid_cap,
@@ -467,9 +445,6 @@ static const struct v4l2_ioctl_ops sun6i_video_ioctl_ops = {
 	.vidioc_enum_input		= vidioc_enum_input,
 	.vidioc_s_input			= vidioc_s_input,
 	.vidioc_g_input			= vidioc_g_input,
-
-	.vidioc_g_parm			= vidioc_g_parm,
-	.vidioc_s_parm			= vidioc_s_parm,
 
 	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
 	.vidioc_querybuf		= vb2_ioctl_querybuf,
@@ -501,13 +476,15 @@ static int sun6i_video_open(struct file *file)
 	if (ret < 0)
 		goto unlock;
 
-	ret = v4l2_pipeline_pm_use(&video->vdev.entity, 1);
+	ret = v4l2_pipeline_pm_get(&video->vdev.entity);
 	if (ret < 0)
 		goto fh_release;
 
 	/* check if already powered */
-	if (!v4l2_fh_is_singular_file(file))
+	if (!v4l2_fh_is_singular_file(file)) {
+		ret = -EBUSY;
 		goto unlock;
+	}
 
 	ret = sun6i_csi_set_power(video->csi, true);
 	if (ret < 0)
@@ -534,7 +511,7 @@ static int sun6i_video_close(struct file *file)
 
 	_vb2_fop_release(file, NULL);
 
-	v4l2_pipeline_pm_use(&video->vdev.entity, 0);
+	v4l2_pipeline_pm_put(&video->vdev.entity);
 
 	if (last_fh)
 		sun6i_csi_set_power(video->csi, false);
@@ -675,7 +652,7 @@ int sun6i_video_init(struct sun6i_video *video, struct sun6i_csi *csi,
 	vdev->release		= video_device_release_empty;
 	vdev->fops		= &sun6i_video_fops;
 	vdev->ioctl_ops		= &sun6i_video_ioctl_ops;
-	vdev->vfl_type		= VFL_TYPE_GRABBER;
+	vdev->vfl_type		= VFL_TYPE_VIDEO;
 	vdev->vfl_dir		= VFL_DIR_RX;
 	vdev->v4l2_dev		= &csi->v4l2_dev;
 	vdev->queue		= vidq;
@@ -683,17 +660,15 @@ int sun6i_video_init(struct sun6i_video *video, struct sun6i_csi *csi,
 	vdev->device_caps	= V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_CAPTURE;
 	video_set_drvdata(vdev, video);
 
-	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
+	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
 	if (ret < 0) {
 		v4l2_err(&csi->v4l2_dev,
 			 "video_register_device failed: %d\n", ret);
-		goto release_vb2;
+		goto clean_entity;
 	}
 
 	return 0;
 
-release_vb2:
-	vb2_queue_release(&video->vb2_vidq);
 clean_entity:
 	media_entity_cleanup(&video->vdev.entity);
 	mutex_destroy(&video->lock);
@@ -702,8 +677,7 @@ clean_entity:
 
 void sun6i_video_cleanup(struct sun6i_video *video)
 {
-	video_unregister_device(&video->vdev);
+	vb2_video_unregister_device(&video->vdev);
 	media_entity_cleanup(&video->vdev.entity);
-	vb2_queue_release(&video->vb2_vidq);
 	mutex_destroy(&video->lock);
 }

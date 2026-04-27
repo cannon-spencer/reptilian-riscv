@@ -8,6 +8,7 @@
  * Based on the work of Josef Gajdusek <atx@atx.name>
  */
 
+#include <linux/bitmap.h>
 #include <linux/clk.h>
 #include <linux/device.h>
 #include <linux/interrupt.h>
@@ -19,6 +20,8 @@
 #include <linux/reset.h>
 #include <linux/slab.h>
 #include <linux/thermal.h>
+
+#include "thermal_hwmon.h"
 
 #define MAX_SENSOR_NUM	4
 
@@ -54,11 +57,6 @@
 #define SUN50I_H6_THS_DATA_IRQ_STS(x)		BIT(x)
 
 /* millidegree celsius */
-#define THS_EFUSE_CP_FT_MASK			0x3000
-#define THS_EFUSE_CP_FT_BIT			12
-#define THS_CALIBRATION_IN_FT			1
-
-struct ths_device;
 
 struct tsensor {
 	struct ths_device		*tmdev;
@@ -77,8 +75,9 @@ struct ths_thermal_chip {
 	int		(*calibrate)(struct ths_device *tmdev,
 				     u16 *caldata, int callen);
 	int		(*init)(struct ths_device *tmdev);
-	int             (*irq_ack)(struct ths_device *tmdev);
-	int		(*calc_temp)(int id, int reg);
+	unsigned long	(*irq_ack)(struct ths_device *tmdev);
+	int		(*calc_temp)(struct ths_device *tmdev,
+				     int id, int reg);
 };
 
 struct ths_device {
@@ -89,20 +88,17 @@ struct ths_device {
 	struct clk				*bus_clk;
 	struct clk                              *mod_clk;
 	struct tsensor				sensor[MAX_SENSOR_NUM];
-	u32					cp_ft_flag;
 };
 
 /* Temp Unit: millidegree Celsius */
-static int sun8i_ths_reg2temp(struct ths_device *tmdev,
-			      int id, int reg)
+static int sun8i_ths_calc_temp(struct ths_device *tmdev,
+			       int id, int reg)
 {
-	if (tmdev->chip->calc_temp)
-		return tmdev->chip->calc_temp(id, reg);
-	else
-		return tmdev->chip->offset - (reg * tmdev->chip->scale / 10);
+	return tmdev->chip->offset - (reg * tmdev->chip->scale / 10);
 }
 
-static int sun50i_h5_calc_temp(int id, int reg)
+static int sun50i_h5_calc_temp(struct ths_device *tmdev,
+			       int id, int reg)
 {
 	if (reg >= 0x500)
 		return -1191 * reg / 10 + 223000;
@@ -125,7 +121,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
 	if (!val)
 		return -EAGAIN;
 
-	*temp = sun8i_ths_reg2temp(tmdev, s->id, val);
+	*temp = tmdev->chip->calc_temp(tmdev, s->id, val);
 	/*
 	 * According to the original sdk, there are some platforms(rarely)
 	 * that add a fixed offset value after calculating the temperature
@@ -148,11 +144,13 @@ static const struct regmap_config config = {
 	.val_bits = 32,
 	.reg_stride = 4,
 	.fast_io = true,
+	.max_register = 0xfc,
 };
 
-static int sun8i_h3_irq_ack(struct ths_device *tmdev)
+static unsigned long sun8i_h3_irq_ack(struct ths_device *tmdev)
 {
-	int i, state, ret = 0;
+	unsigned long irq_bitmap = 0;
+	int i, state;
 
 	regmap_read(tmdev->regmap, SUN8I_THS_IS, &state);
 
@@ -160,16 +158,17 @@ static int sun8i_h3_irq_ack(struct ths_device *tmdev)
 		if (state & SUN8I_THS_DATA_IRQ_STS(i)) {
 			regmap_write(tmdev->regmap, SUN8I_THS_IS,
 				     SUN8I_THS_DATA_IRQ_STS(i));
-			ret |= BIT(i);
+			bitmap_set(&irq_bitmap, i, 1);
 		}
 	}
 
-	return ret;
+	return irq_bitmap;
 }
 
-static int sun50i_h6_irq_ack(struct ths_device *tmdev)
+static unsigned long sun50i_h6_irq_ack(struct ths_device *tmdev)
 {
-	int i, state, ret = 0;
+	unsigned long irq_bitmap = 0;
+	int i, state;
 
 	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
 
@@ -177,24 +176,22 @@ static int sun50i_h6_irq_ack(struct ths_device *tmdev)
 		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
 			regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
 				     SUN50I_H6_THS_DATA_IRQ_STS(i));
-			ret |= BIT(i);
+			bitmap_set(&irq_bitmap, i, 1);
 		}
 	}
 
-	return ret;
+	return irq_bitmap;
 }
 
 static irqreturn_t sun8i_irq_thread(int irq, void *data)
 {
 	struct ths_device *tmdev = data;
-	int i, state;
+	unsigned long irq_bitmap = tmdev->chip->irq_ack(tmdev);
+	int i;
 
-	state = tmdev->chip->irq_ack(tmdev);
-
-	for (i = 0; i < tmdev->chip->sensor_num; i++) {
-		if (state & BIT(i))
-			thermal_zone_device_update(tmdev->sensor[i].tzd,
-						   THERMAL_EVENT_UNSPECIFIED);
+	for_each_set_bit(i, &irq_bitmap, tmdev->chip->sensor_num) {
+		thermal_zone_device_update(tmdev->sensor[i].tzd,
+					   THERMAL_EVENT_UNSPECIFIED);
 	}
 
 	return IRQ_HANDLED;
@@ -246,13 +243,11 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
 	 * register values and this will become a calibration offset.
 	 */
 	ft_temp = (caldata[0] & FT_TEMP_MASK) * 100;
-	tmdev->cp_ft_flag = (caldata[0] & THS_EFUSE_CP_FT_MASK)
-		>> THS_EFUSE_CP_FT_BIT;
 
 	for (i = 0; i < tmdev->chip->sensor_num; i++) {
-		int sensor_reg = caldata[i + 1];
+		int sensor_reg = caldata[i + 1] & TEMP_CALIB_MASK;
 		int cdata, offset;
-		int sensor_temp = sun8i_ths_reg2temp(tmdev, i, sensor_reg);
+		int sensor_temp = tmdev->chip->calc_temp(tmdev, i, sensor_reg);
 
 		/*
 		 * Calibration data is CALIBRATE_DEFAULT - (calculated
@@ -260,7 +255,8 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
 		 * minus actual factory temperature) * 14.88 (scale from
 		 * temperature to register values)
 		 */
-		cdata = CALIBRATE_DEFAULT - ((sensor_temp - ft_temp) * 10 / tmdev->chip->scale);
+		cdata = CALIBRATE_DEFAULT -
+			((sensor_temp - ft_temp) * 10 / tmdev->chip->scale);
 		if (cdata & ~TEMP_CALIB_MASK) {
 			/*
 			 * Calibration value more than 12-bit, but calibration
@@ -304,7 +300,7 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
 		 * or 0x8xx, so they won't be away from the default value
 		 * for a lot.
 		 *
-		 * So here we do not return error if the calibartion data is
+		 * So here we do not return error if the calibration data is
 		 * not available, except the probe needs deferring.
 		 */
 		goto out;
@@ -327,12 +323,10 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
 {
 	struct device *dev = tmdev->dev;
 	struct platform_device *pdev = to_platform_device(dev);
-	struct resource *mem;
 	void __iomem *base;
 	int ret;
 
-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	base = devm_ioremap_resource(dev, mem);
+	base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
@@ -341,7 +335,7 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
 		return PTR_ERR(tmdev->regmap);
 
 	if (tmdev->chip->has_bus_clk_reset) {
-		tmdev->reset = devm_reset_control_get(dev, 0);
+		tmdev->reset = devm_reset_control_get(dev, NULL);
 		if (IS_ERR(tmdev->reset))
 			return PTR_ERR(tmdev->reset);
 
@@ -424,8 +418,8 @@ static int sun8i_h3_thermal_init(struct ths_device *tmdev)
 }
 
 /*
- * Without this undocummented value, the returned temperatures would
- * be higher than real ones by about 20°C.
+ * Without this undocumented value, the returned temperatures would
+ * be higher than real ones by about 20C.
  */
 #define SUN50I_H6_CTRL0_UNK 0x0000002f
 
@@ -480,6 +474,10 @@ static int sun8i_ths_register(struct ths_device *tmdev)
 							     &ths_ops);
 		if (IS_ERR(tmdev->sensor[i].tzd))
 			return PTR_ERR(tmdev->sensor[i].tzd);
+
+		if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
+			dev_warn(tmdev->dev,
+				 "Failed to add hwmon sysfs attributes\n");
 	}
 
 	return 0;
@@ -529,7 +527,7 @@ static int sun8i_ths_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	return ret;
+	return 0;
 }
 
 static int sun8i_ths_remove(struct platform_device *pdev)
@@ -545,42 +543,30 @@ static int sun8i_ths_remove(struct platform_device *pdev)
 
 static const struct ths_thermal_chip sun8i_a83t_ths = {
 	.sensor_num = 3,
-
-	// values taken from A83T user manual (T = (2719-Tem)/14.186)
 	.scale = 705,
 	.offset = 191668,
-
 	.temp_data_base = SUN8I_THS_TEMP_DATA,
 	.calibrate = sun8i_h3_ths_calibrate,
 	.init = sun8i_h3_thermal_init,
 	.irq_ack = sun8i_h3_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
 };
 
 static const struct ths_thermal_chip sun8i_h3_ths = {
 	.sensor_num = 1,
-	.has_mod_clk = true,
-	.has_bus_clk_reset = true,
-
-	// original BSP divs by 8.253 adds 217
 	.scale = 1211,
 	.offset = 217000,
-
-	// datasheet says T = (Tem - 2794)/-14.882
-	//.scale = 672,
-	//.offset = 187743,
-
-	// 4.9 BSP says: T = -0.118 * Tem + 256 = 256 - Tem/8.4746
-	//.scale = 1180,
-	//.offset = 256000 + 15000,
-
+	.has_mod_clk = true,
+	.has_bus_clk_reset = true,
 	.temp_data_base = SUN8I_THS_TEMP_DATA,
 	.calibrate = sun8i_h3_ths_calibrate,
 	.init = sun8i_h3_thermal_init,
 	.irq_ack = sun8i_h3_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
 };
 
 static const struct ths_thermal_chip sun8i_r40_ths = {
-	.sensor_num = 3,
+	.sensor_num = 2,
 	.offset = 251086,
 	.scale = 1130,
 	.has_mod_clk = true,
@@ -589,11 +575,12 @@ static const struct ths_thermal_chip sun8i_r40_ths = {
 	.calibrate = sun8i_h3_ths_calibrate,
 	.init = sun8i_h3_thermal_init,
 	.irq_ack = sun8i_h3_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
 };
 
 static const struct ths_thermal_chip sun50i_a64_ths = {
 	.sensor_num = 3,
-	.offset = 253890,
+	.offset = 260890,
 	.scale = 1170,
 	.has_mod_clk = true,
 	.has_bus_clk_reset = true,
@@ -601,6 +588,20 @@ static const struct ths_thermal_chip sun50i_a64_ths = {
 	.calibrate = sun8i_h3_ths_calibrate,
 	.init = sun8i_h3_thermal_init,
 	.irq_ack = sun8i_h3_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
+};
+
+static const struct ths_thermal_chip sun50i_a100_ths = {
+	.sensor_num = 3,
+	.has_bus_clk_reset = true,
+	.ft_deviation = 8000,
+	.offset = 187744,
+	.scale = 672,
+	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+	.calibrate = sun50i_h6_ths_calibrate,
+	.init = sun50i_h6_thermal_init,
+	.irq_ack = sun50i_h6_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
 };
 
 static const struct ths_thermal_chip sun50i_h5_ths = {
@@ -624,6 +625,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
 	.calibrate = sun50i_h6_ths_calibrate,
 	.init = sun50i_h6_thermal_init,
 	.irq_ack = sun50i_h6_irq_ack,
+	.calc_temp = sun8i_ths_calc_temp,
 };
 
 static const struct of_device_id of_ths_match[] = {
@@ -631,6 +633,7 @@ static const struct of_device_id of_ths_match[] = {
 	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
 	{ .compatible = "allwinner,sun8i-r40-ths", .data = &sun8i_r40_ths },
 	{ .compatible = "allwinner,sun50i-a64-ths", .data = &sun50i_a64_ths },
+	{ .compatible = "allwinner,sun50i-a100-ths", .data = &sun50i_a100_ths },
 	{ .compatible = "allwinner,sun50i-h5-ths", .data = &sun50i_h5_ths },
 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
 	{ /* sentinel */ },

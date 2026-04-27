@@ -22,16 +22,19 @@ description: |
 
 properties:
   compatible:
-    items:
-      - enum:
-          - allwinner,sun8i-h3-msgbox
-          - allwinner,sun50i-a64-msgbox
-          - allwinner,sun50i-h6-msgbox
+    oneOf:
+      - items:
+          - enum:
+              - allwinner,sun8i-a83t-msgbox
+              - allwinner,sun8i-h3-msgbox
+              - allwinner,sun9i-a80-msgbox
+              - allwinner,sun50i-a64-msgbox
+              - allwinner,sun50i-h6-msgbox
+          - const: allwinner,sun6i-a31-msgbox
       - const: allwinner,sun6i-a31-msgbox
 
   reg:
-    items:
-      - description: MMIO register range
+    maxItems: 1
 
   clocks:
     maxItems: 1
@@ -43,10 +46,10 @@ properties:
 
   interrupts:
     maxItems: 1
-    description: controller interrupt
 
   '#mbox-cells':
     const: 1
+    description: first cell is the channel number (0-7)
 
 required:
   - compatible

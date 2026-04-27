@@ -332,10 +332,6 @@ static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
 		return retdesc;
 	}
 
-	ret = PTR_ERR(retdesc);
-	if (ret == -EPROBE_DEFER)
-		return retdesc;
-
 	retdesc = devm_gpiod_get_index(dev, NULL, index, gflags);
 	if (!IS_ERR(retdesc)) {
 		dev_dbg(dev, "got GPIO from index %u\n", index);
@@ -524,5 +520,5 @@ module_exit(i2c_gpio_exit);
 
 MODULE_AUTHOR("Haavard Skinnemoen (Atmel)");
 MODULE_DESCRIPTION("Platform-independent bitbanging I2C driver");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:i2c-gpio");

@@ -102,7 +102,6 @@ static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
 		return ret;
 
 	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
-	pr_info("Using CPU speed bin %s\n", name);
 
 	for_each_possible_cpu(cpu) {
 		struct device *cpu_dev = get_cpu_device(cpu);
@@ -168,6 +167,7 @@ static const struct of_device_id sun50i_cpufreq_match_list[] = {
 	{ .compatible = "allwinner,sun50i-h6" },
 	{}
 };
+MODULE_DEVICE_TABLE(of, sun50i_cpufreq_match_list);
 
 static const struct of_device_id *sun50i_cpufreq_match_node(void)
 {

@@ -130,7 +130,6 @@ enum axp20x_variants {
 
 /* Other DCDC regulator control registers are the same as AXP803 */
 #define AXP813_DCDC7_V_OUT		0x26
-#define AXP813_CHRG_CTRL3		0x35
 
 /* Interrupt */
 #define AXP152_IRQ1_EN			0x40
@@ -697,6 +696,6 @@ int axp20x_device_probe(struct axp20x_dev *axp20x);
  *
  * This tells the axp20x core to remove the associated mfd devices
  */
-int axp20x_device_remove(struct axp20x_dev *axp20x);
+void axp20x_device_remove(struct axp20x_dev *axp20x);
 
 #endif /* __LINUX_MFD_AXP20X_H */

@@ -1,62 +1,21 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright (C) 2019 Igor Pecovnik <igor@armbian.com>
- *
- * This file is dual-licensed: you can use it either under the terms
- * of the GPL or the X11 license, at your option. Note that this dual
- * licensing only applies to this file, and not this project as a
- * whole.
- *
- *  a) This file is free software; you can redistribute it and/or
- *     modify it under the terms of the GNU General Public License as
- *     published by the Free Software Foundation; either version 2 of the
- *     License, or (at your option) any later version.
- *
- *     This file is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- * Or, alternatively,
- *
- *  b) Permission is hereby granted, free of charge, to any person
- *     obtaining a copy of this software and associated documentation
- *     files (the "Software"), to deal in the Software without
- *     restriction, including without limitation the rights to use,
- *     copy, modify, merge, publish, distribute, sublicense, and/or
- *     sell copies of the Software, and to permit persons to whom the
- *     Software is furnished to do so, subject to the following
- *     conditions:
- *
- *     The above copyright notice and this permission notice shall be
- *     included in all copies or substantial portions of the Software.
- *
- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *     OTHER DEALINGS IN THE SOFTWARE.
- */
+ * Copyright (C) 2020 Jayantajit Gogoi <jayanta.gogoi525@gmail.com>
+ * Copyright (C) 2020 Yu-Tung Chang <mtwget@gmail.com>
+*/
 
 #include "sun8i-h3-nanopi.dtsi"
+#include <dt-bindings/leds/common.h>
 
 / {
-	model = "FriendlyElec NanoPi-R1";
+	model = "FriendlyARM NanoPi R1";
 	compatible = "friendlyarm,nanopi-r1", "allwinner,sun8i-h3";
 
 	aliases {
-		serial1 = &uart3;
+		serial1 = &uart1;
 		ethernet0 = &emac;
-		ethernet1 = &emac;
-		ethernet2 = &sdio_wifi;
-	};
-
-	wifi_pwrseq: wifi_pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		pinctrl-names = "default";
-		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+		ethernet1 = &wifi;
 	};
 
 	reg_gmac_3v3: gmac-3v3 {
@@ -66,66 +25,56 @@
 		regulator-max-microvolt = <3300000>;
 		startup-delay-us = <100000>;
 		enable-active-high;
-		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
 	};
 
-	vdd_cpux: gpio-regulator {
+	reg_vdd_cpux: gpio-regulator {
 		compatible = "regulator-gpio";
-		pinctrl-names = "default";
 		regulator-name = "vdd-cpux";
 		regulator-type = "voltage";
 		regulator-boot-on;
 		regulator-always-on;
 		regulator-min-microvolt = <1100000>;
 		regulator-max-microvolt = <1300000>;
-		regulator-ramp-delay = <50>; /* 4ms */
+		regulator-ramp-delay = <50>;
 		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
 		gpios-states = <0x1>;
-		states = <1100000 0x0
-			  1300000 0x1>;
+		states = <1100000 0x0>,
+			 <1300000 0x1>;
+	};
+
+	wifi_pwrseq: wifi_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+		clocks = <&rtc 1>;
+		clock-names = "ext_clock";
 	};
 
 	leds {
-		/delete-node/ status;
-		/delete-node/ pwr;
-		led1 {
-			label = "LED1";
-			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "heartbeat";
+		led-2 {
+			function = LED_FUNCTION_WAN;
+			color = <LED_COLOR_ID_GREEN>;
+			gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
 		};
 
-		led2 {
-			label = "LED2";
-			gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-			linux,default-trigger = "netdev";
-		};
-
-		led3 {
-			label = "LED3";
-			gpios = <&pio 0 9 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-			linux,default-trigger = "netdev";
-		};
-	};
-
-	r_gpio_keys {
-		compatible = "gpio-keys";
-		input-name = "k1";
-		pinctrl-names = "default";
-		pinctrl-0 = <&sw_r_npi>;
-
-		/delete-node/ k1;
-		reset {
-			label = "reset";
-			linux,code = <BTN_1>;
-			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+		led-3 {
+			function = LED_FUNCTION_LAN;
+			color = <LED_COLOR_ID_GREEN>;
+			gpios = <&pio 0 9 GPIO_ACTIVE_HIGH>; /* PA9 */
 		};
 	};
 };
 
 &cpu0 {
-	cpu-supply = <&vdd_cpux>;
+	cpu-supply = <&reg_vdd_cpux>;
+};
+
+&ehci1 {
+	status = "okay";
+};
+
+&ehci2 {
+	status = "okay";
 };
 
 &emac {
@@ -133,13 +82,12 @@
 	pinctrl-0 = <&emac_rgmii_pins>;
 	phy-supply = <&reg_gmac_3v3>;
 	phy-handle = <&ext_rgmii_phy>;
-	phy-mode = "rgmii";
-
+	phy-mode = "rgmii-id";
 	status = "okay";
 };
 
 &external_mdio {
-	ext_rgmii_phy: ethernet-phy@1 {
+	ext_rgmii_phy: ethernet-phy@7 {
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <7>;
 	};
@@ -153,7 +101,7 @@
 	non-removable;
 	status = "okay";
 
-	sdio_wifi: sdio_wifi@1 {
+	wifi: wifi@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
 		interrupt-parent = <&pio>;
@@ -172,19 +120,50 @@
 	status = "okay";
 };
 
-&ohci0 {
-	status = "okay";
-};
-
 &ohci1 {
 	status = "okay";
 };
 
-&usb_otg {
-	dr_mode = "peripheral";
+&ohci2 {
 	status = "okay";
 };
 
+&reg_usb0_vbus {
+	gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
+	status = "okay";
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pins>;
+	status = "okay";
+};
+
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart3_pins>, <&uart3_rts_cts_pins>;
+	uart-has-rtscts;
+	status = "okay";
+
+	bluetooth {
+		compatible = "brcm,bcm43438-bt";
+		clocks = <&rtc 1>;
+		clock-names = "lpo";
+		vbat-supply = <&reg_vcc3v3>;
+		vddio-supply = <&reg_vcc3v3>;
+		device-wakeup-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
+		host-wakeup-gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
+		shutdown-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
+	};
+};
+
+&usb_otg {
+	status = "okay";
+	dr_mode = "otg";
+};
+
 &usbphy {
+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+	usb0_vbus-supply = <&reg_usb0_vbus>;
 	status = "okay";
 };

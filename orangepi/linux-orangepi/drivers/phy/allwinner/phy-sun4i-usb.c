@@ -7,7 +7,7 @@
  * Based on code from
  * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
  *
- * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
+ * Modelled after: Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
  */
@@ -16,6 +16,7 @@
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <linux/extcon-provider.h>
+#include <linux/gpio/consumer.h>
 #include <linux/io.h>
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
@@ -685,7 +686,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	struct device_node *np = dev->of_node;
 	struct phy_provider *phy_provider;
-	struct resource *res;
 	int i, ret;
 
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
@@ -699,24 +699,21 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
 	if (!data->cfg)
 		return -EINVAL;
 
-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
-	data->base = devm_ioremap_resource(dev, res);
+	data->base = devm_platform_ioremap_resource_byname(pdev, "phy_ctrl");
 	if (IS_ERR(data->base))
 		return PTR_ERR(data->base);
 
 	data->id_det_gpio = devm_gpiod_get_optional(dev, "usb0_id_det",
 						    GPIOD_IN);
 	if (IS_ERR(data->id_det_gpio)) {
-		if (PTR_ERR(data->id_det_gpio) != -EPROBE_DEFER)
-			dev_err(dev, "Couldn't request ID GPIO\n");
+		dev_err(dev, "Couldn't request ID GPIO\n");
 		return PTR_ERR(data->id_det_gpio);
 	}
 
 	data->vbus_det_gpio = devm_gpiod_get_optional(dev, "usb0_vbus_det",
 						      GPIOD_IN);
 	if (IS_ERR(data->vbus_det_gpio)) {
-		if (PTR_ERR(data->vbus_det_gpio) != -EPROBE_DEFER)
-			dev_err(dev, "Couldn't request VBUS detect GPIO\n");
+		dev_err(dev, "Couldn't request VBUS detect GPIO\n");
 		return PTR_ERR(data->vbus_det_gpio);
 	}
 
@@ -724,8 +721,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
 		data->vbus_power_supply = devm_power_supply_get_by_phandle(dev,
 						     "usb0_vbus_power-supply");
 		if (IS_ERR(data->vbus_power_supply)) {
-			if (PTR_ERR(data->vbus_power_supply) != -EPROBE_DEFER)
-				dev_err(dev, "Couldn't get the VBUS power supply\n");
+			dev_err(dev, "Couldn't get the VBUS power supply\n");
 			return PTR_ERR(data->vbus_power_supply);
 		}
 
@@ -798,9 +794,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
 
 		if (i || data->cfg->phy0_dual_route) { /* No pmu for musb */
 			snprintf(name, sizeof(name), "pmu%d", i);
-			res = platform_get_resource_byname(pdev,
-							IORESOURCE_MEM, name);
-			phy->pmu = devm_ioremap_resource(dev, res);
+			phy->pmu = devm_platform_ioremap_resource_byname(pdev, name);
 			if (IS_ERR(phy->pmu))
 				return PTR_ERR(phy->pmu);
 		}
@@ -815,31 +809,29 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
 		phy_set_drvdata(phy->phy, &data->phys[i]);
 	}
 
-	if (!of_find_property(np, "force-poll-vbus-id-det", NULL)) {
-		data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
-		if (data->id_det_irq > 0) {
-			ret = devm_request_irq(dev, data->id_det_irq,
-					sun4i_usb_phy0_id_vbus_det_irq,
-					IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-					"usb0-id-det", data);
-			if (ret) {
-				dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
-				return ret;
-			}
+	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+	if (data->id_det_irq > 0) {
+		ret = devm_request_irq(dev, data->id_det_irq,
+				sun4i_usb_phy0_id_vbus_det_irq,
+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+				"usb0-id-det", data);
+		if (ret) {
+			dev_err(dev, "Err requesting id-det-irq: %d\n", ret);
+			return ret;
 		}
+	}
 
-		data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
-		if (data->vbus_det_irq > 0) {
-			ret = devm_request_irq(dev, data->vbus_det_irq,
-					sun4i_usb_phy0_id_vbus_det_irq,
-					IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-					"usb0-vbus-det", data);
-			if (ret) {
-				dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
-				data->vbus_det_irq = -1;
-				sun4i_usb_phy_remove(pdev); /* Stop detect work */
-				return ret;
-			}
+	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
+	if (data->vbus_det_irq > 0) {
+		ret = devm_request_irq(dev, data->vbus_det_irq,
+				sun4i_usb_phy0_id_vbus_det_irq,
+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+				"usb0-vbus-det", data);
+		if (ret) {
+			dev_err(dev, "Err requesting vbus-det-irq: %d\n", ret);
+			data->vbus_det_irq = -1;
+			sun4i_usb_phy_remove(pdev); /* Stop detect work */
+			return ret;
 		}
 	}
 
@@ -973,7 +965,6 @@ static const struct sun4i_usb_phy_cfg sun50i_h6_cfg = {
 	.disc_thresh = 3,
 	.phyctl_offset = REG_PHYCTL_A33,
 	.dedicated_clocks = true,
-	.enable_pmu_unk1 = true,
 	.phy0_dual_route = true,
 	.missing_phys = BIT(1) | BIT(2),
 };

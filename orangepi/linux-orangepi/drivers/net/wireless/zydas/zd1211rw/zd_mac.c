@@ -229,19 +229,14 @@ void zd_mac_clear(struct zd_mac *mac)
 static int set_rx_filter(struct zd_mac *mac)
 {
 	unsigned long flags;
-	struct zd_ioreq32 ioreqs[] = {
-		{CR_RX_FILTER, STA_RX_FILTER},
-		{ CR_SNIFFER_ON, 0U },
-	};
+	u32 filter = STA_RX_FILTER;
 
 	spin_lock_irqsave(&mac->lock, flags);
-	if (mac->pass_ctrl) {
-		ioreqs[0].value |= 0xFFFFFFFF;
-		ioreqs[1].value = 0x1;
-	}
+	if (mac->pass_ctrl)
+		filter |= RX_FILTER_CTRL;
 	spin_unlock_irqrestore(&mac->lock, flags);
 
-	return zd_iowrite32a(&mac->chip, ioreqs, ARRAY_SIZE(ioreqs));
+	return zd_iowrite32(&mac->chip, CR_RX_FILTER, filter);
 }
 
 static int set_mac_and_bssid(struct zd_mac *mac)
@@ -421,11 +416,10 @@ int zd_restore_settings(struct zd_mac *mac)
 
 /**
  * zd_mac_tx_status - reports tx status of a packet if required
- * @hw - a &struct ieee80211_hw pointer
- * @skb - a sk-buffer
- * @flags: extra flags to set in the TX status info
+ * @hw: a &struct ieee80211_hw pointer
+ * @skb: a sk-buffer
  * @ackssi: ACK signal strength
- * @success - True for successful transmission of the frame
+ * @tx_status: success and/or retry
  *
  * This information calls ieee80211_tx_status_irqsafe() if required by the
  * control information. It copies the control information into the status
@@ -482,7 +476,7 @@ static void zd_mac_tx_status(struct ieee80211_hw *hw, struct sk_buff *skb,
 
 /**
  * zd_mac_tx_failed - callback for failed frames
- * @dev: the mac80211 wireless device
+ * @urb: pointer to the urb structure
  *
  * This function is called if a frame couldn't be successfully
  * transferred. The first frame from the tx queue, will be selected and
@@ -918,9 +912,9 @@ static int fill_ctrlset(struct zd_mac *mac,
 /**
  * zd_op_tx - transmits a network frame to the device
  *
- * @dev: mac80211 hardware device
- * @skb: socket buffer
+ * @hw: a &struct ieee80211_hw pointer
  * @control: the control structure
+ * @skb: socket buffer
  *
  * This function transmit an IEEE 802.11 network frame to the device. The
  * control block of the skbuff will be initialized. If necessary the incoming
@@ -951,7 +945,7 @@ fail:
 
 /**
  * filter_ack - filters incoming packets for acknowledgements
- * @dev: the mac80211 device
+ * @hw: a &struct ieee80211_hw pointer
  * @rx_hdr: received header
  * @stats: the status for the received packet
  *
@@ -1048,8 +1042,7 @@ int zd_mac_rx(struct ieee80211_hw *hw, const u8 *buffer, unsigned int length)
 	/* Caller has to ensure that length >= sizeof(struct rx_status). */
 	status = (struct rx_status *)
 		(buffer + (length - sizeof(struct rx_status)));
-	if ((status->frame_status & ZD_RX_ERROR) ||
-		(status->frame_status & ~0x21)) {
+	if (status->frame_status & ZD_RX_ERROR) {
 		if (mac->pass_failed_fcs &&
 				(status->frame_status & ZD_RX_CRC32_ERROR)) {
 			stats.flag |= RX_FLAG_FAILED_FCS_CRC;
@@ -1392,7 +1385,7 @@ struct ieee80211_hw *zd_mac_alloc_hw(struct usb_interface *intf)
 	ieee80211_hw_set(hw, MFP_CAPABLE);
 	ieee80211_hw_set(hw, HOST_BROADCAST_PS_BUFFERING);
 	ieee80211_hw_set(hw, RX_INCLUDES_FCS);
-	ieee80211_hw_set(hw, SIGNAL_DBM);
+	ieee80211_hw_set(hw, SIGNAL_UNSPEC);
 
 	hw->wiphy->interface_modes =
 		BIT(NL80211_IFTYPE_MESH_POINT) |
