@@ -28,3 +28,5 @@ These may not exactly match what you need to use (e.g. UUID).
 
 You can modify them over UART using `env set` or `env edit`.
 Save them to spi flash using `env save`.
+
+Theoretically, you could avoid having to modify these through the uboot prompt. Instead, just pull the mtd from the working device in its entirety once you're in linux proper with `dd` and flash it to the new device. The exact commands are an exercise left for the reader.
