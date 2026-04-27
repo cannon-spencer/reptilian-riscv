@@ -1,0 +1,16 @@
+!<thin>
+//                                              100       `
+dev/bittiming.o/
+dev/dev.o/
+dev/length.o/
+dev/netlink.o/
+dev/rx-offload.o/
+dev/skb.o/
+ipms_canfd.o/
+/0              0           0     0     644     8600      `
+/17             0           0     0     644     31136     `
+/28             0           0     0     644     5408      `
+/42             0           0     0     644     15800     `
+/57             0           0     0     644     20672     `
+/75             0           0     0     644     14520     `
+/86             0           0     0     644     49040     `

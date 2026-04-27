@@ -1,0 +1,1 @@
+jh7110-i2c0.o: arch/riscv/boot/dts/starfive/overlay/jh7110-i2c0.dts

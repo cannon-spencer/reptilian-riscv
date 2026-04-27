@@ -1,0 +1,5 @@
+fs/binfmt_misc.ko
+fs/ufs/ufs.ko
+fs/ubifs/ubifs.ko
+fs/efivarfs/efivarfs.ko
+fs/erofs/erofs.ko

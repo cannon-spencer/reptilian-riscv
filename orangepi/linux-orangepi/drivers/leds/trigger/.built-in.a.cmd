@@ -1,0 +1,1 @@
+cmd_drivers/leds/trigger/built-in.a := echo >/dev/null; rm -f drivers/leds/trigger/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/leds/trigger/built-in.a drivers/leds/trigger/ledtrig-heartbeat.o drivers/leds/trigger/ledtrig-gpio.o

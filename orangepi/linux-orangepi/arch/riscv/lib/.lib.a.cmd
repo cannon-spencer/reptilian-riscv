@@ -1,0 +1,1 @@
+cmd_arch/riscv/lib/lib.a := echo >/dev/null; rm -f arch/riscv/lib/lib.a; riscv64-linux-gnu-ar cDPrsT arch/riscv/lib/lib.a arch/riscv/lib/delay.o arch/riscv/lib/memcpy_aligned.o arch/riscv/lib/memmove.o arch/riscv/lib/memset.o arch/riscv/lib/string.o arch/riscv/lib/tishift.o arch/riscv/lib/uaccess.o

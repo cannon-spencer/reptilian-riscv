@@ -1,0 +1,35 @@
+!<thin>
+//                                              570       `
+starfive/v4l2_driver/ov5647_mipi.o/
+starfive/v4l2_driver/imx219_mipi.o/
+starfive/v4l2_driver/stfcamss.o/
+starfive/v4l2_driver/stf_event.o/
+starfive/v4l2_driver/stf_dvp.o/
+starfive/v4l2_driver/stf_csi.o/
+starfive/v4l2_driver/stf_csiphy.o/
+starfive/v4l2_driver/stf_isp.o/
+starfive/v4l2_driver/stf_video.o/
+starfive/v4l2_driver/stf_vin.o/
+starfive/v4l2_driver/stf_vin_hw_ops.o/
+starfive/v4l2_driver/stf_csi_hw_ops.o/
+starfive/v4l2_driver/stf_csiphy_hw_ops.o/
+starfive/v4l2_driver/stf_isp_hw_ops.o/
+starfive/v4l2_driver/stf_dvp_hw_ops.o/
+starfive/v4l2_driver/stf_dmabuf.o/
+
+/0              0           0     0     644     61672     `
+/36             0           0     0     644     53624     `
+/72             0           0     0     644     82744     `
+/105            0           0     0     644     5256      `
+/139            0           0     0     644     20384     `
+/171            0           0     0     644     21352     `
+/203            0           0     0     644     18488     `
+/238            0           0     0     644     80096     `
+/270            0           0     0     644     83784     `
+/304            0           0     0     644     66672     `
+/336            0           0     0     644     28320     `
+/375            0           0     0     644     14240     `
+/414            0           0     0     644     19400     `
+/456            0           0     0     644     79576     `
+/495            0           0     0     644     9840      `
+/534            0           0     0     644     6864      `

@@ -1,0 +1,1 @@
+cmd_drivers/media/platform/chips-media/wave5/built-in.a := echo >/dev/null; rm -f drivers/media/platform/chips-media/wave5/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/media/platform/chips-media/wave5/built-in.a 

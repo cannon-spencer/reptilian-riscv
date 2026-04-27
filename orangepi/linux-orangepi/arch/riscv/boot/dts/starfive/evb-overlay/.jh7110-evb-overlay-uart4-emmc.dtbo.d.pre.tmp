@@ -1,0 +1,4 @@
+jh7110-evb-overlay-uart4-emmc.o: \
+ arch/riscv/boot/dts/starfive/evb-overlay/jh7110-evb-overlay-uart4-emmc.dts \
+ scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h \
+ scripts/dtc/include-prefixes/dt-bindings/pinctrl/starfive,jh7110-pinfunc.h

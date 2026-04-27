@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb-frontends/dib0090.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/dib0090.ko drivers/media/dvb-frontends/dib0090.o drivers/media/dvb-frontends/dib0090.mod.o;  true

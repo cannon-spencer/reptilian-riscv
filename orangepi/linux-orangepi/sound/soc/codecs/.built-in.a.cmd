@@ -1,0 +1,1 @@
+cmd_sound/soc/codecs/built-in.a := echo >/dev/null; rm -f sound/soc/codecs/built-in.a; riscv64-linux-gnu-ar cDPrST sound/soc/codecs/built-in.a sound/soc/codecs/ac108.o sound/soc/codecs/ac101.o sound/soc/codecs/wm8960.o

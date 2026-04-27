@@ -1,0 +1,64 @@
+!<thin>
+//                                              698       `
+stmmac/stmmac_main.o/
+stmmac/stmmac_ethtool.o/
+stmmac/stmmac_mdio.o/
+stmmac/ring_mode.o/
+stmmac/chain_mode.o/
+stmmac/dwmac_lib.o/
+stmmac/dwmac1000_core.o/
+stmmac/dwmac1000_dma.o/
+stmmac/dwmac100_core.o/
+stmmac/dwmac100_dma.o/
+stmmac/enh_desc.o/
+stmmac/norm_desc.o/
+stmmac/mmc_core.o/
+stmmac/stmmac_hwtstamp.o/
+stmmac/stmmac_ptp.o/
+stmmac/dwmac4_descs.o/
+stmmac/dwmac4_dma.o/
+stmmac/dwmac4_lib.o/
+stmmac/dwmac4_core.o/
+stmmac/dwmac5.o/
+stmmac/hwif.o/
+stmmac/stmmac_tc.o/
+stmmac/dwxgmac2_core.o/
+stmmac/dwxgmac2_dma.o/
+stmmac/dwxgmac2_descs.o/
+stmmac/stmmac_xdp.o/
+stmmac/stmmac_selftests.o/
+stmmac/stmmac_platform.o/
+stmmac/dwmac-dwc-qos-eth.o/
+stmmac/dwmac-starfive-plat.o/
+stmmac/dwmac-generic.o/
+/0              0           0     0     644     303984    `
+/22             0           0     0     644     48944     `
+/47             0           0     0     644     28128     `
+/69             0           0     0     644     11576     `
+/89             0           0     0     644     11656     `
+/110            0           0     0     644     15904     `
+/130            0           0     0     644     26512     `
+/155            0           0     0     644     11944     `
+/179            0           0     0     644     10936     `
+/203            0           0     0     644     6912      `
+/226            0           0     0     644     20408     `
+/245            0           0     0     644     14336     `
+/265            0           0     0     644     10984     `
+/284            0           0     0     644     9904      `
+/310            0           0     0     644     12824     `
+/331            0           0     0     644     22288     `
+/354            0           0     0     644     20288     `
+/375            0           0     0     644     16280     `
+/396            0           0     0     644     58752     `
+/418            0           0     0     644     43872     `
+/435            0           0     0     644     13800     `
+/450            0           0     0     644     31840     `
+/470            0           0     0     644     81728     `
+/494            0           0     0     644     27912     `
+/517            0           0     0     644     14568     `
+/542            0           0     0     644     3864      `
+/563            0           0     0     644     74640     `
+/590            0           0     0     644     50328     `
+/616            0           0     0     644     30496     `
+/644            0           0     0     644     14104     `
+/674            0           0     0     644     9896      `

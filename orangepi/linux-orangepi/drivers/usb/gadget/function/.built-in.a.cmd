@@ -1,0 +1,1 @@
+cmd_drivers/usb/gadget/function/built-in.a := echo >/dev/null; rm -f drivers/usb/gadget/function/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/usb/gadget/function/built-in.a drivers/usb/gadget/function/f_mass_storage.o drivers/usb/gadget/function/storage_common.o drivers/usb/gadget/function/f_fs.o

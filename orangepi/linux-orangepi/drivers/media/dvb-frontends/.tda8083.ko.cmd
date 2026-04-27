@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb-frontends/tda8083.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/tda8083.ko drivers/media/dvb-frontends/tda8083.o drivers/media/dvb-frontends/tda8083.mod.o;  true

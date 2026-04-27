@@ -1,0 +1,18 @@
+!<thin>
+//                                              196       `
+dmaengine.o/
+virt-dma.o/
+of-dma.o/
+dmatest.o/
+amba-pl08x.o/
+dw-axi-dmac/dw-axi-dmac-platform.o/
+dw-axi-dmac-starfive/starfive_dmaengine_memcpy.o/
+dw-axi-dmac-starfive/dw-axi-dmac-starfive-misc.o/
+/0              0           0     0     644     96912     `
+/13             0           0     0     644     11648     `
+/25             0           0     0     644     20544     `
+/35             0           0     0     644     85112     `
+/46             0           0     0     644     101416    `
+/60             0           0     0     644     77600     `
+/96             0           0     0     644     13752     `
+/146            0           0     0     644     16352     `

@@ -1,0 +1,1 @@
+cmd_drivers/net/wireless/mediatek/mt76/modules.order := {   echo drivers/net/wireless/mediatek/mt76/mt76.ko;   cat drivers/net/wireless/mediatek/mt76/mt7915/modules.order; :; } | awk '!x[$$0]++' - > drivers/net/wireless/mediatek/mt76/modules.order

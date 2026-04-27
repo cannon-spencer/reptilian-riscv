@@ -1,0 +1,1 @@
+cmd_drivers/spi/built-in.a := echo >/dev/null; rm -f drivers/spi/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/spi/built-in.a drivers/spi/spi.o drivers/spi/spi-mem.o drivers/spi/spidev.o drivers/spi/spi-cadence-quadspi.o drivers/spi/spi-pl022-starfive.o drivers/spi/spi-sifive.o

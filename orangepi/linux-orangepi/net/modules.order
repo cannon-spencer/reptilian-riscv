@@ -1,0 +1,11 @@
+net/netfilter/xt_socket.ko
+net/ipv4/ip_tunnel.ko
+net/ipv4/udp_tunnel.ko
+net/ipv4/tunnel4.ko
+net/ipv6/sit.ko
+net/ipv6/ip6_udp_tunnel.ko
+net/bluetooth/bluetooth.ko
+net/bluetooth/rfcomm/rfcomm.ko
+net/bluetooth/bnep/bnep.ko
+net/bluetooth/hidp/hidp.ko
+net/rxrpc/rxrpc.ko

@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb-frontends/dib3000mc.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/dib3000mc.ko drivers/media/dvb-frontends/dib3000mc.o drivers/media/dvb-frontends/dib3000mc.mod.o;  true

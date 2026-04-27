@@ -1,0 +1,18 @@
+!<thin>
+//                                              114       `
+sdhci.o/
+mmc_spi.o/
+of_mmc_spi.o/
+dw_mmc.o/
+dw_mmc-pltfm.o/
+dw_mmc-starfive.o/
+sdhci-pltfm.o/
+sdhci-of-dwcmshc.o/
+/0              0           0     0     644     202016    `
+/9              0           0     0     644     48688     `
+/20             0           0     0     644     5952      `
+/34             0           0     0     644     117712    `
+/44             0           0     0     644     10224     `
+/60             0           0     0     644     16280     `
+/79             0           0     0     644     21016     `
+/94             0           0     0     644     28864     `

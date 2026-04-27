@@ -1,0 +1,27 @@
+!<thin>
+//                                              174       `
+vs_dc_hw.o/
+vs_dc.o/
+vs_crtc.o/
+vs_drv.o/
+vs_fb.o/
+vs_gem.o/
+vs_plane.o/
+vs_simple_enc.o/
+inno_hdmi.o/
+starfive_hdmi_audio.o/
+starfive_drm_dsi.o/
+starfive_drm_seeedpanel.o/
+
+/0              0           0     0     644     61368     `
+/12             0           0     0     644     67704     `
+/21             0           0     0     644     20120     `
+/32             0           0     0     644     25944     `
+/42             0           0     0     644     10984     `
+/51             0           0     0     644     21336     `
+/61             0           0     0     644     18040     `
+/73             0           0     0     644     10608     `
+/90             0           0     0     644     43048     `
+/103            0           0     0     644     9960      `
+/126            0           0     0     644     60344     `
+/146            0           0     0     644     17992     `

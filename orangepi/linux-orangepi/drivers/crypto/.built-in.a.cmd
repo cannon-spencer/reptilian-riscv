@@ -1,0 +1,1 @@
+cmd_drivers/crypto/built-in.a := echo >/dev/null; rm -f drivers/crypto/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/crypto/built-in.a drivers/crypto/virtio/built-in.a drivers/crypto/starfive/built-in.a drivers/crypto/hisilicon/built-in.a drivers/crypto/keembay/built-in.a

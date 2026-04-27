@@ -1,0 +1,1 @@
+cmd_drivers/rpmsg/built-in.a := echo >/dev/null; rm -f drivers/rpmsg/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/rpmsg/built-in.a drivers/rpmsg/rpmsg_core.o drivers/rpmsg/rpmsg_char.o drivers/rpmsg/rpmsg_ns.o drivers/rpmsg/virtio_rpmsg_bus.o

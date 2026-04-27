@@ -1,0 +1,1 @@
+cmd_drivers/crypto/virtio/built-in.a := echo >/dev/null; rm -f drivers/crypto/virtio/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/crypto/virtio/built-in.a drivers/crypto/virtio/virtio_crypto_algs.o drivers/crypto/virtio/virtio_crypto_mgr.o drivers/crypto/virtio/virtio_crypto_core.o

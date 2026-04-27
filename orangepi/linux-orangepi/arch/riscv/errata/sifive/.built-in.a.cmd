@@ -1,0 +1,1 @@
+cmd_arch/riscv/errata/sifive/built-in.a := echo >/dev/null; rm -f arch/riscv/errata/sifive/built-in.a; riscv64-linux-gnu-ar cDPrST arch/riscv/errata/sifive/built-in.a arch/riscv/errata/sifive/errata_cip_453.o arch/riscv/errata/sifive/errata.o

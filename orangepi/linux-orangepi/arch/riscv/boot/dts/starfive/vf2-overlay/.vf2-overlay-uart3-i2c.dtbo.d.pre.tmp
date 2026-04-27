@@ -1,0 +1,4 @@
+vf2-overlay-uart3-i2c.o: \
+ arch/riscv/boot/dts/starfive/vf2-overlay/vf2-overlay-uart3-i2c.dts \
+ scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h \
+ scripts/dtc/include-prefixes/dt-bindings/pinctrl/starfive,jh7110-pinfunc.h

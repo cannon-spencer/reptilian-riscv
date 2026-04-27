@@ -30,3 +30,10 @@ You can modify them over UART using `env set` or `env edit`.
 Save them to spi flash using `env save`.
 
 Theoretically, you could avoid having to modify these through the uboot prompt. Instead, just pull the mtd from the working device in its entirety once you're in linux proper with `dd` and flash it to the new device. The exact commands are an exercise left for the reader.
+
+** IF USING VERITY
+
+If you're using verity, then you DEFINITELY don't want bootargs to be using that uuid (the mutable rootfs for development). Instead, make bootargs the following:
+```
+console=tty0 console=ttyS0,115200 earlycon rootwait ro root=/dev/mapper/verityroot
+```

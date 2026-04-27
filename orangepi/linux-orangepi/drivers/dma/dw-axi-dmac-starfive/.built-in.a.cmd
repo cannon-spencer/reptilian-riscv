@@ -1,0 +1,1 @@
+cmd_drivers/dma/dw-axi-dmac-starfive/built-in.a := echo >/dev/null; rm -f drivers/dma/dw-axi-dmac-starfive/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/dma/dw-axi-dmac-starfive/built-in.a drivers/dma/dw-axi-dmac-starfive/starfive_dmaengine_memcpy.o drivers/dma/dw-axi-dmac-starfive/dw-axi-dmac-starfive-misc.o

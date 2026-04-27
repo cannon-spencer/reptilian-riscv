@@ -1,0 +1,1 @@
+cmd_drivers/input/touchscreen/built-in.a := echo >/dev/null; rm -f drivers/input/touchscreen/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/input/touchscreen/built-in.a drivers/input/touchscreen/tinker_ft5406.o

@@ -1,0 +1,1 @@
+cmd_drivers/dma/dw-axi-dmac/built-in.a := echo >/dev/null; rm -f drivers/dma/dw-axi-dmac/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/dma/dw-axi-dmac/built-in.a drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.o

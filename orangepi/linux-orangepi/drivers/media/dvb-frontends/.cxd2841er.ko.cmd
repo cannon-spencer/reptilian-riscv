@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb-frontends/cxd2841er.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/cxd2841er.ko drivers/media/dvb-frontends/cxd2841er.o drivers/media/dvb-frontends/cxd2841er.mod.o;  true

@@ -1,0 +1,1 @@
+cmd_drivers/usb/cdns3/built-in.a := echo >/dev/null; rm -f drivers/usb/cdns3/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/usb/cdns3/built-in.a drivers/usb/cdns3/core.o drivers/usb/cdns3/drd.o drivers/usb/cdns3/host.o drivers/usb/cdns3/cdns3-plat.o drivers/usb/cdns3/cdns3-gadget.o drivers/usb/cdns3/cdns3-ep0.o drivers/usb/cdns3/cdns3-starfive.o

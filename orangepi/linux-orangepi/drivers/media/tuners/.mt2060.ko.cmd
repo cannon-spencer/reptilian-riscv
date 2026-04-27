@@ -1,0 +1,1 @@
+cmd_drivers/media/tuners/mt2060.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/tuners/mt2060.ko drivers/media/tuners/mt2060.o drivers/media/tuners/mt2060.mod.o;  true

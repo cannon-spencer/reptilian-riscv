@@ -1,0 +1,1 @@
+cmd_drivers/media/tuners/tda9887.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/tuners/tda9887.ko drivers/media/tuners/tda9887.o drivers/media/tuners/tda9887.mod.o;  true

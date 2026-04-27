@@ -1,0 +1,1 @@
+arch/riscv/boot/dts/starfive/vf2-overlay/vf2-overlay-uart3-i2c.dtbo: arch/riscv/boot/dts/starfive/vf2-overlay/.vf2-overlay-uart3-i2c.dtbo.dts.tmp
