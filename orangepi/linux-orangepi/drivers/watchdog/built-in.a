@@ -1,9 +1,0 @@
-!<thin>
-//                                              50        `
-watchdog_core.o/
-watchdog_dev.o/
-starfive-wdt.o/
-
-/0              0           0     0     644     28848     `
-/17             0           0     0     644     56904     `
-/33             0           0     0     644     43432     `

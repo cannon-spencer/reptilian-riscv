@@ -1,1 +1,0 @@
-cmd_drivers/net/can/dev/built-in.a := echo >/dev/null; rm -f drivers/net/can/dev/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/net/can/dev/built-in.a drivers/net/can/dev/bittiming.o drivers/net/can/dev/dev.o drivers/net/can/dev/length.o drivers/net/can/dev/netlink.o drivers/net/can/dev/rx-offload.o drivers/net/can/dev/skb.o

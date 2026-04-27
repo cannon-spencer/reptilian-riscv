@@ -1,1 +1,0 @@
-cmd_drivers/reset/starfive/built-in.a := echo >/dev/null; rm -f drivers/reset/starfive/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/reset/starfive/built-in.a drivers/reset/starfive/reset-starfive-jh7110.o

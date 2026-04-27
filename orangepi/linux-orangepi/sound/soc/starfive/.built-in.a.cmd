@@ -1,1 +1,0 @@
-cmd_sound/soc/starfive/built-in.a := echo >/dev/null; rm -f sound/soc/starfive/built-in.a; riscv64-linux-gnu-ar cDPrST sound/soc/starfive/built-in.a sound/soc/starfive/starfive_pwmdac.o sound/soc/starfive/starfive_pwmdac_transmitter.o sound/soc/starfive/starfive_i2s.o

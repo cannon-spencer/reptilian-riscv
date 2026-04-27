@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/lgs8gxx.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/lgs8gxx.ko drivers/media/dvb-frontends/lgs8gxx.o drivers/media/dvb-frontends/lgs8gxx.mod.o;  true

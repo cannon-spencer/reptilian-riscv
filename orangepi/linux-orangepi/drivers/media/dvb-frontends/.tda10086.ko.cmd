@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/tda10086.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/tda10086.ko drivers/media/dvb-frontends/tda10086.o drivers/media/dvb-frontends/tda10086.mod.o;  true

@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/au8522_common.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/au8522_common.ko drivers/media/dvb-frontends/au8522_common.o drivers/media/dvb-frontends/au8522_common.mod.o;  true

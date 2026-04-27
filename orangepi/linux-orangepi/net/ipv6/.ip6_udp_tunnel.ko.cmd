@@ -1,1 +1,0 @@
-cmd_net/ipv6/ip6_udp_tunnel.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o net/ipv6/ip6_udp_tunnel.ko net/ipv6/ip6_udp_tunnel.o net/ipv6/ip6_udp_tunnel.mod.o;  true

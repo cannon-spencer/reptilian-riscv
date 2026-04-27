@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/stv090x.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/stv090x.ko drivers/media/dvb-frontends/stv090x.o drivers/media/dvb-frontends/stv090x.mod.o;  true

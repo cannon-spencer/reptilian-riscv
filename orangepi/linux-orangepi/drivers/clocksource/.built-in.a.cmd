@@ -1,1 +1,0 @@
-cmd_drivers/clocksource/built-in.a := echo >/dev/null; rm -f drivers/clocksource/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/clocksource/built-in.a drivers/clocksource/timer-of.o drivers/clocksource/timer-probe.o drivers/clocksource/mmio.o drivers/clocksource/dummy_timer.o drivers/clocksource/timer-riscv.o drivers/clocksource/timer-starfive.o

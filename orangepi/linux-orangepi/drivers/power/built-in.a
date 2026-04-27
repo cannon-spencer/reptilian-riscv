@@ -1,8 +1,0 @@
-!<thin>
-//                                              70        `
-reset/gpio-restart.o/
-reset/syscon-reboot.o/
-reset/syscon-poweroff.o/
-/0              0           0     0     644     12032     `
-/22             0           0     0     644     8152      `
-/45             0           0     0     644     11128     `

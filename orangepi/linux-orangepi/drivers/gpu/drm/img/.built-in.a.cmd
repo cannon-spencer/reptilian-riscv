@@ -1,1 +1,0 @@
-cmd_drivers/gpu/drm/img/built-in.a := echo >/dev/null; rm -f drivers/gpu/drm/img/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/gpu/drm/img/built-in.a drivers/gpu/drm/img/riscv_vmap.o drivers/gpu/drm/img/img-rogue/built-in.a

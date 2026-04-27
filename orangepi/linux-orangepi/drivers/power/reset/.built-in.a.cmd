@@ -1,1 +1,0 @@
-cmd_drivers/power/reset/built-in.a := echo >/dev/null; rm -f drivers/power/reset/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/power/reset/built-in.a drivers/power/reset/gpio-restart.o drivers/power/reset/syscon-reboot.o drivers/power/reset/syscon-poweroff.o

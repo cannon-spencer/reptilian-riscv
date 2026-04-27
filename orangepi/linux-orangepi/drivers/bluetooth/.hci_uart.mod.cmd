@@ -1,1 +1,0 @@
-cmd_drivers/bluetooth/hci_uart.mod := { echo  drivers/bluetooth/hci_ldisc.o drivers/bluetooth/hci_h4.o drivers/bluetooth/hci_ldisc.o drivers/bluetooth/hci_h4.o;  echo; } > drivers/bluetooth/hci_uart.mod

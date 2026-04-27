@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/stv0900.o := riscv64-linux-gnu-ld -melf64lriscv   -r -o drivers/media/dvb-frontends/stv0900.o drivers/media/dvb-frontends/stv0900_core.o drivers/media/dvb-frontends/stv0900_sw.o

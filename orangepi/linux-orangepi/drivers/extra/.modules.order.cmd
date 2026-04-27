@@ -1,1 +1,0 @@
-cmd_drivers/extra/modules.order := {   cat drivers/extra/wave511/code/vdi/linux/driver/modules.order;   cat drivers/extra/wave420l/code/vdi/linux/driver/modules.order;   cat drivers/extra/codaj12/jdi/linux/driver/modules.order; :; } | awk '!x[$$0]++' - > drivers/extra/modules.order

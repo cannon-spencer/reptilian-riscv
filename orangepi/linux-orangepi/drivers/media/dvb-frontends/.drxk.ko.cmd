@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/drxk.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/drxk.ko drivers/media/dvb-frontends/drxk.o drivers/media/dvb-frontends/drxk.mod.o;  true

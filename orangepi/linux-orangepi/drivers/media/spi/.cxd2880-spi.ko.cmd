@@ -1,1 +1,0 @@
-cmd_drivers/media/spi/cxd2880-spi.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/spi/cxd2880-spi.ko drivers/media/spi/cxd2880-spi.o drivers/media/spi/cxd2880-spi.mod.o;  true

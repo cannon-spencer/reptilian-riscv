@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/cxd2820r.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/cxd2820r.ko drivers/media/dvb-frontends/cxd2820r.o drivers/media/dvb-frontends/cxd2820r.mod.o;  true

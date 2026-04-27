@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/nxt6000.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/nxt6000.ko drivers/media/dvb-frontends/nxt6000.o drivers/media/dvb-frontends/nxt6000.mod.o;  true

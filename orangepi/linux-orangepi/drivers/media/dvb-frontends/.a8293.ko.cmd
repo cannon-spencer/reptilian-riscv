@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/a8293.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/a8293.ko drivers/media/dvb-frontends/a8293.o drivers/media/dvb-frontends/a8293.mod.o;  true

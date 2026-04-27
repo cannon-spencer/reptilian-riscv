@@ -1,2 +1,0 @@
-jh7110-spi0-cs0-spidev.o: \
- arch/riscv/boot/dts/starfive/overlay/jh7110-spi0-cs0-spidev.dts

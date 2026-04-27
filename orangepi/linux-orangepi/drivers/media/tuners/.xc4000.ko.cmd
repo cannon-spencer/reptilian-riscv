@@ -1,1 +1,0 @@
-cmd_drivers/media/tuners/xc4000.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/tuners/xc4000.ko drivers/media/tuners/xc4000.o drivers/media/tuners/xc4000.mod.o;  true

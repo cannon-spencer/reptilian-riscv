@@ -1,1 +1,0 @@
-cmd_drivers/mailbox/starfive_mailbox.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/mailbox/starfive_mailbox.ko drivers/mailbox/starfive_mailbox.o drivers/mailbox/starfive_mailbox.mod.o;  true

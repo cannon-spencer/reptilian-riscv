@@ -1,1 +1,0 @@
-cmd_drivers/media/tuners/fc0012.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/tuners/fc0012.ko drivers/media/tuners/fc0012.o drivers/media/tuners/fc0012.mod.o;  true

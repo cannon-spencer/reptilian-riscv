@@ -1,1 +1,0 @@
-cmd_drivers/media/tuners/tea5761.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/tuners/tea5761.ko drivers/media/tuners/tea5761.o drivers/media/tuners/tea5761.mod.o;  true

@@ -1,1 +1,0 @@
-cmd_drivers/clk/sifive/built-in.a := echo >/dev/null; rm -f drivers/clk/sifive/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/clk/sifive/built-in.a drivers/clk/sifive/sifive-prci.o drivers/clk/sifive/fu540-prci.o drivers/clk/sifive/fu740-prci.o

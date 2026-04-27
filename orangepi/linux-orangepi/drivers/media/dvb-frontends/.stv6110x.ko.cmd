@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/stv6110x.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/stv6110x.ko drivers/media/dvb-frontends/stv6110x.o drivers/media/dvb-frontends/stv6110x.mod.o;  true

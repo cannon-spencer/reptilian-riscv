@@ -1,1 +1,0 @@
-cmd_drivers/block/built-in.a := echo >/dev/null; rm -f drivers/block/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/block/built-in.a drivers/block/loop.o drivers/block/virtio_blk.o drivers/block/zram/built-in.a

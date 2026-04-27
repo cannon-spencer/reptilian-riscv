@@ -1,4 +1,0 @@
-jh7110-evb-overlay-can.o: \
- arch/riscv/boot/dts/starfive/evb-overlay/jh7110-evb-overlay-can.dts \
- scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h \
- scripts/dtc/include-prefixes/dt-bindings/pinctrl/starfive,jh7110-pinfunc.h

@@ -1,1 +1,0 @@
-cmd_drivers/extra/built-in.a := echo >/dev/null; rm -f drivers/extra/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/extra/built-in.a drivers/extra/wave511/code/vdi/linux/driver/built-in.a drivers/extra/wave420l/code/vdi/linux/driver/built-in.a drivers/extra/codaj12/jdi/linux/driver/built-in.a

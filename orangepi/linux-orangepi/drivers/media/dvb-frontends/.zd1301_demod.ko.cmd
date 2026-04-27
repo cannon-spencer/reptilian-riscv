@@ -1,1 +1,0 @@
-cmd_drivers/media/dvb-frontends/zd1301_demod.ko := riscv64-linux-gnu-ld -r -melf64lriscv --build-id=sha1  -T scripts/module.lds -o drivers/media/dvb-frontends/zd1301_demod.ko drivers/media/dvb-frontends/zd1301_demod.o drivers/media/dvb-frontends/zd1301_demod.mod.o;  true

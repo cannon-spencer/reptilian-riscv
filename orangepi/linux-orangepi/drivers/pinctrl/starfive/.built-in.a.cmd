@@ -1,1 +1,0 @@
-cmd_drivers/pinctrl/starfive/built-in.a := echo >/dev/null; rm -f drivers/pinctrl/starfive/built-in.a; riscv64-linux-gnu-ar cDPrST drivers/pinctrl/starfive/built-in.a drivers/pinctrl/starfive/pinctrl-starfive.o drivers/pinctrl/starfive/pinctrl-starfive-jh7110.o
