@@ -37,3 +37,5 @@ If you're using verity, then you DEFINITELY don't want bootargs to be using that
 ```
 console=tty0 console=ttyS0,115200 earlycon rootwait ro root=/dev/mapper/verityroot
 ```
+
+Unfortunately, the easiest way to switch between these seems to be to just modify bootargs and type in the UUID or verity stuff after interrupting the autoboot sequence. I tried a more programmatic approach, but uboot shell syntax is weird. Feel free to give that a shot if you're interested.
