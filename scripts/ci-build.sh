@@ -19,7 +19,14 @@ make -C "$UBOOT" CROSS_COMPILE="$CROSS" -j"$(nproc)"
 cp "$UBOOT/visionfive2_fw_payload.img" "$OUT/visionfive2_fw_payload.img"
 
 echo "building image"
-(cd "$BUILDER" && sudo ./build.sh BOARD=orangepirv BRANCH=current BUILD_OPT=image BUILD_DESKTOP=no)
+(cd "$BUILDER" && sudo ./build.sh \
+  BOARD=orangepirv \
+  BRANCH=current \
+  RELEASE=sid \
+  BUILD_OPT=image \
+  BUILD_DESKTOP=no \
+  BUILD_MINIMAL=no \
+  KERNEL_CONFIGURE=no)
 img="$(find "$BUILDER/output/images" -name '*.img' | head -n 1)"
 [[ -n "$img" ]] || { echo "error: no image produced" >&2; exit 1; }
 cp "$img" "$OUT/os.img"
