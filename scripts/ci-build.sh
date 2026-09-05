@@ -12,9 +12,11 @@ CROSS=riscv64-linux-gnu-
 mkdir -p "$OUT"
 
 echo "building firmware"
-make -C "$UBOOT" O="$OUT/u-boot" CROSS_COMPILE="$CROSS" starfive_visionfive2_defconfig
-make -C "$UBOOT" O="$OUT/u-boot" CROSS_COMPILE="$CROSS" -j"$(nproc)"
-cp "$OUT/u-boot/visionfive2_fw_payload.img" "$OUT/visionfive2_fw_payload.img"
+# In-tree: StarFive's OpenSBI step uses $(CURDIR)/opensbi and inherits O=.
+# Out-of-tree O= makes OpenSBI compile into the U-Boot output dir and fail.
+make -C "$UBOOT" CROSS_COMPILE="$CROSS" starfive_visionfive2_defconfig
+make -C "$UBOOT" CROSS_COMPILE="$CROSS" -j"$(nproc)"
+cp "$UBOOT/visionfive2_fw_payload.img" "$OUT/visionfive2_fw_payload.img"
 
 echo "building image"
 (cd "$BUILDER" && sudo ./build.sh BOARD=orangepirv BRANCH=current BUILD_OPT=image BUILD_DESKTOP=no)
