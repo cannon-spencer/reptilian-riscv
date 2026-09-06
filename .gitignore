@@ -1,5 +1,3 @@
-build/os.img
-build/os.img.xz
-build/u-boot/
+build/*
 orangepi/orangepi-build/output/
 .DS_Store
