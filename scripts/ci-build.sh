@@ -13,7 +13,6 @@ mkdir -p "$OUT"
 
 echo "building firmware"
 # In-tree: StarFive's OpenSBI step uses $(CURDIR)/opensbi and inherits O=.
-# Out-of-tree O= makes OpenSBI compile into the U-Boot output dir and fail.
 make -C "$UBOOT" CROSS_COMPILE="$CROSS" starfive_visionfive2_defconfig
 make -C "$UBOOT" CROSS_COMPILE="$CROSS" -j"$(nproc)"
 cp "$UBOOT/visionfive2_fw_payload.img" "$OUT/visionfive2_fw_payload.img"

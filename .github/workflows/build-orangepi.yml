@@ -3,9 +3,10 @@ name: Build Orange Pi RV OS
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "build/**"
-      - "README.md"
+    paths:
+      - "orangepi/**"
+      - "scripts/ci-build.sh"
+      - ".github/workflows/build-orangepi.yml"
   workflow_dispatch:
 
 permissions:

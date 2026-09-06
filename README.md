@@ -7,9 +7,4 @@ Board sources for the exam-computer project.
 
 ## CI
 
-Push to `main` on Ubuntu 22.04:
-
-1. `scripts/ci-build.sh` compiles U-Boot and runs `orangepi-build` for `orangepirv`
-2. Both artifacts go on the rolling GitHub Release `orangepi-rv`:
-   - `visionfive2_fw_payload.img`
-   - `os.img.xz`
+Push to `main` only runs CI if `orangepi/`, `scripts/ci-build.sh`, or this workflow changed. Use **Run workflow** for a full rebuild anytime. Artifacts go on the rolling Release `orangepi-rv`.
